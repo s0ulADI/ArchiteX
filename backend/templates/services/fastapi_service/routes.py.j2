@@ -1,0 +1,14 @@
+from fastapi import APIRouter
+
+router = APIRouter()
+
+{% for endpoint in service.endpoints if endpoint != "/health" %}
+
+@router.api_route("{{ endpoint }}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"])
+async def {{ service.id | replace("-", "_") }}_{{ loop.index }}():
+    return {
+        "service": "{{ service.id }}",
+        "endpoint": "{{ endpoint }}",
+        "status": "scaffolded",
+    }
+{% endfor %}

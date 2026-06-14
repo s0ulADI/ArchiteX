@@ -1,0 +1,18 @@
+const router = require("express").Router();
+
+{% for endpoint in service.endpoints if endpoint != "/health" %}
+router.all("{{ endpoint }}", (req, res) => {
+  res.json({
+    service: "{{ service.id }}",
+    endpoint: "{{ endpoint }}",
+    method: req.method,
+    status: "scaffolded"
+  });
+});
+{% endfor %}
+
+router.all("*", (_req, res) => {
+  res.status(404).json({ error: "Not found", service: "{{ service.id }}" });
+});
+
+module.exports = router;

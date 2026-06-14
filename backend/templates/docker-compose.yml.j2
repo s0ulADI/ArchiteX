@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+{% for service in all_services %}
+  {{ service.id }}:
+{% if service.type == "database" %}
+    image: postgres:16-alpine
+    ports:
+      - "{{ service.port }}:5432"
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    volumes:
+      - ./{{ service.id }}/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+{% elif service.type == "cache" %}
+    image: redis:7-alpine
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    ports:
+      - "{{ service.port }}:6379"
+    volumes:
+      - ./{{ service.id }}/redis.conf:/usr/local/etc/redis/redis.conf:ro
+{% else %}
+    build: ./{{ service.id }}
+    ports:
+      - "{{ service.port }}:{{ service.port }}"
+    env_file:
+      - .env.example
+{% set deps = connections | selectattr("from_id", "equalto", service.id) | list %}
+{% if deps %}
+    depends_on:
+{% for connection in deps %}
+      - {{ connection.to_id }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}

@@ -1,0 +1,16 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package.json ./
+RUN npm install --omit=dev
+
+COPY . .
+
+{% for env_var in service.env_vars %}
+ENV {{ env_var }}=""
+{% endfor %}
+
+EXPOSE {{ service.port }}
+
+CMD ["node", "index.js"]

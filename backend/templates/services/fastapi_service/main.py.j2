@@ -1,0 +1,13 @@
+from fastapi import FastAPI
+
+from routes import router
+
+app = FastAPI(title="{{ service.label }}", version="1.0.0")
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok", "service": "{{ service.id }}"}
+
+
+app.include_router(router)

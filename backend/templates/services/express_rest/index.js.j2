@@ -1,0 +1,17 @@
+const express = require("express");
+const routes = require("./routes");
+
+const app = express();
+const port = process.env.PORT || {{ service.port }};
+
+app.use(express.json());
+
+app.get("/health", (_req, res) => {
+  res.json({ status: "ok", service: "{{ service.id }}" });
+});
+
+app.use("/", routes);
+
+app.listen(port, () => {
+  console.log("{{ service.label }} listening on port " + port);
+});
