@@ -1,0 +1,3395 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ArchiteX</title>
+  <style>
+    :root {
+      --bg-primary: #0D0E1A;
+      --bg-secondary: #13152A;
+      --bg-tertiary: #1C1F3A;
+      --accent: #6C63FF;
+      --accent-hover: #5A52E0;
+      --accent-glow: rgba(108, 99, 255, 0.18);
+      --text-primary: #F0F0FF;
+      --text-secondary: #9A9BC0;
+      --border: rgba(108, 99, 255, 0.2);
+      --success: #22C97B;
+      --warning: #F5A623;
+      --danger: #FF5C6A;
+      --teal: #24D6B5;
+      --orange: #FFB14A;
+      --panel-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+      --radius-card: 8px;
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--bg-primary);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button,
+    a,
+    .clickable,
+    .nav-item,
+    .tab,
+    .icon-button,
+    .project-action,
+    .drop-zone,
+    .mock-component,
+    .settings-nav button,
+    .chip,
+    .swatch {
+      cursor: pointer;
+    }
+
+    button,
+    .card,
+    .project-card,
+    .stat-card,
+    .nav-item,
+    .icon-button,
+    .action-button,
+    .tab,
+    .chip,
+    .mock-component,
+    .activity-item,
+    .settings-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+    }
+
+    button:active,
+    .nav-item:active,
+    .icon-button:active,
+    .project-action:active,
+    .tab:active,
+    .chip:active {
+      transform: scale(0.97);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible,
+    .tab:focus-visible,
+    .nav-item:focus-visible,
+    .icon-button:focus-visible,
+    .chip:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    h1,
+    h2,
+    h3,
+    .brand-text,
+    .display-font {
+      margin: 0;
+      font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .hidden,
+    [hidden] {
+      display: none !important;
+    }
+
+    .icon-sprite {
+      display: none;
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+      border-radius: 8px;
+      padding: 4px;
+      background: rgba(240, 240, 255, 0.04);
+      box-shadow: 0 0 0 1px var(--border), 0 12px 26px rgba(108, 99, 255, 0.12);
+    }
+
+    .brand-text {
+      color: var(--accent);
+      font-size: 22px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .auth-page {
+      position: relative;
+      display: grid;
+      min-height: 100vh;
+      place-items: center;
+      overflow: hidden;
+      padding: 28px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(108, 99, 255, 0.08) 0 1px, transparent 1px 100%) 0 0 / 28px 28px,
+        var(--bg-primary);
+    }
+
+    .auth-page::before {
+      position: absolute;
+      width: min(620px, 85vw);
+      height: min(620px, 85vw);
+      content: "";
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(108, 99, 255, 0.2), rgba(33, 43, 86, 0.08) 48%, transparent 70%);
+      filter: blur(2px);
+      animation: drift 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(-10%, -6%, 0) scale(0.95); opacity: 0.7; }
+      to { transform: translate3d(10%, 7%, 0) scale(1.05); opacity: 1; }
+    }
+
+    .auth-card {
+      position: relative;
+      z-index: 1;
+      width: min(440px, 100%);
+      padding: 40px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(19, 21, 42, 0.94);
+      box-shadow: var(--panel-shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .auth-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 26px;
+      text-align: center;
+    }
+
+    .auth-brand .brand-text {
+      font-size: 28px;
+    }
+
+    .auth-brand p {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    .tabs,
+    .sub-tabs,
+    .mode-tabs,
+    .theme-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .tabs {
+      padding: 4px;
+      margin-bottom: 22px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--bg-tertiary);
+    }
+
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      color: var(--text-secondary);
+      background: transparent;
+      white-space: nowrap;
+    }
+
+    .tabs .tab {
+      flex: 1;
+    }
+
+    .tab:hover,
+    .chip:hover,
+    .icon-button:hover,
+    .project-action:hover {
+      color: var(--text-primary);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px var(--accent-glow);
+    }
+
+    .tab.active {
+      color: white;
+      background: var(--accent);
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
+    .sub-tabs .tab {
+      min-height: 32px;
+      border-radius: 8px;
+      border-bottom: 2px solid transparent;
+    }
+
+    .sub-tabs .tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: rgba(108, 99, 255, 0.08);
+      box-shadow: none;
+    }
+
+    .form-panel {
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field label {
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .input-wrap {
+      position: relative;
+      min-width: 0;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+      padding: 10px 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(154, 155, 192, 0.7);
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+      outline: none;
+    }
+
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      background: transparent;
+      transform: translateY(-50%);
+    }
+
+    .password-toggle:hover {
+      color: var(--accent);
+      background: rgba(108, 99, 255, 0.08);
+    }
+
+    .with-toggle {
+      padding-right: 44px;
+    }
+
+    .mobile-row {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      gap: 8px;
+    }
+
+    .action-button,
+    .ghost-button,
+    .danger-button {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 8px;
+      padding: 0 15px;
+      border: 1px solid transparent;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .action-button {
+      color: white;
+      background: var(--accent);
+      box-shadow: 0 12px 32px var(--accent-glow);
+    }
+
+    .action-button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 16px 38px var(--accent-glow);
+    }
+
+    .ghost-button {
+      color: var(--text-primary);
+      border-color: var(--border);
+      background: rgba(28, 31, 58, 0.75);
+    }
+
+    .ghost-button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px var(--accent-glow);
+    }
+
+    .danger-button {
+      color: white;
+      background: var(--danger);
+    }
+
+    .danger-button.ghost {
+      color: var(--danger);
+      border-color: rgba(255, 92, 106, 0.4);
+      background: rgba(255, 92, 106, 0.08);
+    }
+
+    .otp-panel {
+      display: grid;
+      gap: 12px;
+      margin-top: 2px;
+      padding-top: 4px;
+    }
+
+    .success-text {
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .otp-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 48px);
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .otp-grid input {
+      width: 48px;
+      height: 56px;
+      padding: 0;
+      text-align: center;
+      font-family: "Space Grotesk", Inter, sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, rgba(108, 99, 255, 0.06), transparent 38%),
+        var(--bg-primary);
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 40;
+      display: flex;
+      width: 240px;
+      flex-direction: column;
+      gap: 22px;
+      border-right: 1px solid var(--border);
+      background: rgba(19, 21, 42, 0.96);
+      padding: 22px 16px;
+      backdrop-filter: blur(18px);
+    }
+
+    .sidebar .brand {
+      padding: 0 8px 10px;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      min-height: 46px;
+      align-items: center;
+      gap: 12px;
+      border: 0;
+      border-left: 3px solid transparent;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      background: transparent;
+      padding: 0 12px;
+      text-align: left;
+    }
+
+    .nav-item:hover {
+      color: var(--text-primary);
+      background: rgba(108, 99, 255, 0.08);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 30px var(--accent-glow);
+    }
+
+    .nav-item.active {
+      border-left-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .sidebar-user {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) 34px;
+      gap: 10px;
+      align-items: center;
+      margin-top: auto;
+      padding: 12px 8px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(28, 31, 58, 0.5);
+    }
+
+    .avatar {
+      display: inline-flex;
+      width: 40px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--accent);
+      font-family: "Space Grotesk", Inter, sans-serif;
+      font-weight: 700;
+    }
+
+    .user-meta {
+      min-width: 0;
+    }
+
+    .user-meta strong,
+    .user-meta span {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .user-meta span {
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .icon-button {
+      position: relative;
+      display: inline-flex;
+      width: 38px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      background: rgba(28, 31, 58, 0.72);
+    }
+
+    .icon-button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(108, 99, 255, 0.08);
+    }
+
+    .tooltip::after {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      z-index: 50;
+      width: max-content;
+      max-width: 190px;
+      content: attr(data-tooltip);
+      pointer-events: none;
+      transform: translateX(-50%) translateY(4px);
+      opacity: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+      padding: 7px 9px;
+      font-size: 12px;
+      box-shadow: var(--panel-shadow);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .tooltip:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .main-content {
+      min-height: 100vh;
+      margin-left: 240px;
+      padding: 28px;
+    }
+
+    .page {
+      display: none;
+      min-height: calc(100vh - 56px);
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .page-title h1 {
+      margin-bottom: 6px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .page-title p,
+    .muted {
+      color: var(--text-secondary);
+    }
+
+    .backend-pill {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text-secondary);
+      background: rgba(28, 31, 58, 0.6);
+      padding: 0 12px;
+      font-size: 12px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--warning);
+      box-shadow: 0 0 0 5px rgba(245, 166, 35, 0.12);
+    }
+
+    .status-dot.online {
+      background: var(--success);
+      box-shadow: 0 0 0 5px rgba(34, 201, 123, 0.12);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card,
+    .project-card,
+    .panel,
+    .settings-card,
+    .readme-body,
+    .detected-panel,
+    .score-panel,
+    .timeline-panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--bg-secondary);
+    }
+
+    .stat-card {
+      display: grid;
+      gap: 12px;
+      min-height: 136px;
+      padding: 20px;
+    }
+
+    .stat-card:hover,
+    .project-card:hover,
+    .settings-card:hover,
+    .activity-item:hover {
+      border-color: rgba(108, 99, 255, 0.46);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 45px var(--accent-glow);
+    }
+
+    .stat-icon {
+      display: inline-flex;
+      width: 36px;
+      height: 36px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: var(--accent);
+      background: rgba(108, 99, 255, 0.1);
+    }
+
+    .stat-number {
+      font-family: "Space Grotesk", Inter, sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      font-size: 20px;
+    }
+
+    .section-heading a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .project-card {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .project-thumb {
+      position: relative;
+      display: grid;
+      height: 120px;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(108, 99, 255, 0.14), rgba(36, 214, 181, 0.06)),
+        var(--bg-tertiary);
+    }
+
+    .node-graph {
+      width: 120px;
+      height: 78px;
+      color: var(--accent);
+    }
+
+    .project-meta {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .project-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .badge-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      border-radius: 999px;
+      padding: 0 8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .badge.backend,
+    .badge.api {
+      color: #dcd9ff;
+      background: rgba(108, 99, 255, 0.18);
+    }
+
+    .badge.frontend,
+    .badge.react {
+      color: #c7fff3;
+      background: rgba(36, 214, 181, 0.16);
+    }
+
+    .badge.reference,
+    .badge.cache,
+    .badge.database {
+      color: #ffe0b3;
+      background: rgba(255, 177, 74, 0.18);
+    }
+
+    .date {
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .project-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding-top: 2px;
+    }
+
+    .project-action {
+      display: inline-flex;
+      width: 32px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      background: rgba(28, 31, 58, 0.5);
+    }
+
+    .project-action.delete:hover {
+      color: var(--danger);
+      border-color: rgba(255, 92, 106, 0.45);
+    }
+
+    .history-panel {
+      position: sticky;
+      top: 28px;
+      max-height: calc(100vh - 56px);
+      overflow: hidden;
+      padding: 18px;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 12px;
+      max-height: 470px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .activity-item {
+      display: grid;
+      grid-template-columns: 10px minmax(0, 1fr);
+      gap: 10px;
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      margin-top: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .activity-item small {
+      display: block;
+      margin-top: 4px;
+      color: var(--text-secondary);
+      font-size: 11px;
+    }
+
+    .split-workspace,
+    .reference-workspace {
+      display: grid;
+      grid-template-columns: 380px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      height: calc(100vh - 56px);
+      min-height: 760px;
+    }
+
+    .left-panel,
+    .right-panel,
+    .reference-left,
+    .reference-right {
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .left-panel,
+    .reference-left {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+      max-height: calc(100vh - 56px);
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .input-panel {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--bg-secondary);
+    }
+
+    .prompt-box {
+      min-height: 96px;
+    }
+
+    .input-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .send-button {
+      width: 42px;
+      height: 38px;
+      padding: 0;
+      border-radius: 999px;
+    }
+
+    .file-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text-secondary);
+      background: rgba(108, 99, 255, 0.08);
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+
+    .file-pill span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-pill button {
+      display: inline-flex;
+      width: 22px;
+      height: 22px;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 50%;
+      color: var(--text-secondary);
+      background: transparent;
+    }
+
+    .file-preview {
+      max-width: 100%;
+      max-height: 160px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .drop-zone {
+      display: grid;
+      min-height: 80px;
+      place-items: center;
+      gap: 4px;
+      border: 1px dashed rgba(108, 99, 255, 0.42);
+      border-radius: 12px;
+      color: var(--text-secondary);
+      background: var(--bg-tertiary);
+      padding: 12px;
+      text-align: center;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragging {
+      border-color: var(--accent);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 35px var(--accent-glow);
+    }
+
+    .drop-zone .icon {
+      color: var(--accent);
+    }
+
+    .detected-panel,
+    .score-panel,
+    .timeline-panel {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .nodes-list,
+    .connections-list,
+    .warning-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .node-item,
+    .connection-item,
+    .warning-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 0;
+      border: 1px solid rgba(108, 99, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(28, 31, 58, 0.55);
+      padding: 8px 10px;
+    }
+
+    .node-left,
+    .warning-left {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mini-dot {
+      width: 8px;
+      height: 8px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px var(--accent-glow);
+    }
+
+    .mini-dot.green {
+      background: var(--success);
+      box-shadow: 0 0 0 5px rgba(34, 201, 123, 0.12);
+    }
+
+    .mini-dot.yellow {
+      background: var(--warning);
+      box-shadow: 0 0 0 5px rgba(245, 166, 35, 0.12);
+    }
+
+    .score-display {
+      display: grid;
+      justify-items: start;
+      gap: 4px;
+    }
+
+    .score-number {
+      color: var(--accent);
+      font-family: "Space Grotesk", Inter, sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+    }
+
+    .progress {
+      overflow: hidden;
+      width: 100%;
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(240, 240, 255, 0.08);
+    }
+
+    .progress > span {
+      display: block;
+      width: 80%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), #24D6B5);
+      transition: width 0.3s ease;
+    }
+
+    .timeline-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pulse::before {
+      width: 8px;
+      height: 8px;
+      content: "";
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 1.2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34, 201, 123, 0.32); }
+      50% { box-shadow: 0 0 0 8px rgba(34, 201, 123, 0); }
+    }
+
+    .timeline-list {
+      display: grid;
+      gap: 8px;
+      max-height: 200px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid rgba(108, 99, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(28, 31, 58, 0.48);
+      padding: 8px;
+      font-size: 12px;
+    }
+
+    .timeline-row code {
+      overflow: hidden;
+      color: var(--text-primary);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    .timeline-row time {
+      color: var(--text-secondary);
+      font-size: 11px;
+    }
+
+    .spinner {
+      width: 13px;
+      height: 13px;
+      border: 2px solid rgba(154, 155, 192, 0.35);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .right-panel,
+    .reference-right {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto auto;
+      overflow: hidden;
+      height: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--bg-secondary);
+    }
+
+    .editor-tabs {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(19, 21, 42, 0.96);
+      padding: 12px;
+    }
+
+    .code-shell,
+    .preview-shell {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .code-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px 0;
+    }
+
+    .code-editor {
+      position: relative;
+      height: calc(100% - 54px);
+      margin: 12px 14px 14px;
+      overflow: auto;
+      border: 1px solid rgba(108, 99, 255, 0.16);
+      border-radius: 12px;
+      background: var(--bg-primary);
+      padding: 20px;
+    }
+
+    .code-editor pre {
+      margin: 0;
+      min-width: 640px;
+      white-space: pre;
+      color: #d9dcff;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .copy-button {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+
+    .token-key {
+      color: #8bd3ff;
+    }
+
+    .token-string {
+      color: #a7f3d0;
+    }
+
+    .token-fn {
+      color: #d7b6ff;
+    }
+
+    .preview-shell {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      background: var(--bg-primary);
+    }
+
+    .preview-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(13, 14, 26, 0.92);
+      padding: 10px 12px;
+      backdrop-filter: blur(14px);
+    }
+
+    .select-modes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .mode-button {
+      min-height: 34px;
+      border-radius: 8px;
+      padding: 0 10px;
+      font-size: 12px;
+    }
+
+    .mode-button.active {
+      color: white;
+      background: var(--accent);
+    }
+
+    .mock-preview {
+      position: relative;
+      height: calc(100vh - 160px);
+      min-height: 520px;
+      overflow: auto;
+      background:
+        linear-gradient(180deg, rgba(108, 99, 255, 0.1), transparent 320px),
+        #101322;
+      padding: 26px;
+    }
+
+    .mock-page {
+      max-width: 980px;
+      margin: 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      background: #f7f8ff;
+      color: #151829;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.38);
+    }
+
+    .mock-component {
+      position: relative;
+      border: 2px dashed transparent;
+      transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+
+    .mock-component:hover {
+      border-color: rgba(108, 99, 255, 0.5);
+      background: rgba(108, 99, 255, 0.06);
+    }
+
+    .mock-component.selected {
+      border-color: #4d8dff;
+      background: rgba(77, 141, 255, 0.12);
+    }
+
+    .section-mode .mock-component:hover::before,
+    .mock-component:hover .section-edit {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-edit {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      min-height: 28px;
+      border: 1px solid rgba(108, 99, 255, 0.3);
+      border-radius: 999px;
+      color: white;
+      background: var(--accent);
+      padding: 0 10px;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .mock-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 24px;
+    }
+
+    .mock-nav strong {
+      color: #1b1d33;
+      font-family: "Space Grotesk", Inter, sans-serif;
+      font-size: 20px;
+    }
+
+    .mock-nav span {
+      color: #5e6385;
+      font-size: 13px;
+    }
+
+    .mock-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 28px;
+      align-items: center;
+      padding: 44px 24px 36px;
+    }
+
+    .mock-hero h2 {
+      margin-bottom: 10px;
+      color: #111323;
+      font-size: 32px;
+      line-height: 1.05;
+    }
+
+    .mock-hero p {
+      max-width: 470px;
+      color: #5e6385;
+      line-height: 1.7;
+    }
+
+    .mock-cta {
+      display: inline-flex;
+      min-height: 38px;
+      align-items: center;
+      margin-top: 18px;
+      border-radius: 8px;
+      color: white;
+      background: var(--accent);
+      padding: 0 16px;
+      font-weight: 800;
+    }
+
+    .mock-visual {
+      display: grid;
+      height: 200px;
+      place-items: center;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(108, 99, 255, 0.18), rgba(36, 214, 181, 0.14));
+    }
+
+    .mock-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      padding: 24px;
+    }
+
+    .mock-card {
+      min-height: 132px;
+      border: 1px solid #e2e5ff;
+      border-radius: 8px;
+      background: white;
+      padding: 16px;
+    }
+
+    .mock-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #151829;
+    }
+
+    .mock-card p {
+      color: #69708f;
+      line-height: 1.55;
+    }
+
+    .mock-footer {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      border-top: 1px solid #e2e5ff;
+      padding: 22px 24px;
+      color: #5e6385;
+      font-size: 12px;
+    }
+
+    .selection-rect {
+      position: absolute;
+      z-index: 20;
+      pointer-events: none;
+      border: 1px dashed #4d8dff;
+      background: rgba(77, 141, 255, 0.12);
+    }
+
+    .edit-panel {
+      position: absolute;
+      top: 58px;
+      right: 16px;
+      z-index: 15;
+      display: grid;
+      width: min(280px, calc(100% - 32px));
+      gap: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      padding: 16px;
+      box-shadow: var(--panel-shadow);
+      transform: translateX(110%);
+      opacity: 0;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .edit-panel.open {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .edit-panel h3 {
+      font-size: 18px;
+    }
+
+    .edit-panel small {
+      color: var(--text-secondary);
+    }
+
+    .export-bar {
+      position: sticky;
+      bottom: 0;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border-top: 1px solid var(--border);
+      background: rgba(19, 21, 42, 0.98);
+      padding: 12px 20px;
+    }
+
+    .export-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .readme-section {
+      border-top: 1px solid var(--border);
+      background: var(--bg-secondary);
+    }
+
+    .readme-toggle {
+      display: flex;
+      width: 100%;
+      min-height: 44px;
+      align-items: center;
+      justify-content: space-between;
+      border: 0;
+      color: var(--text-primary);
+      background: transparent;
+      padding: 0 20px;
+      font-weight: 800;
+    }
+
+    .readme-content {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.25s ease;
+    }
+
+    .readme-content.open {
+      max-height: 420px;
+    }
+
+    .readme-body {
+      margin: 0 20px 16px;
+      overflow: auto;
+      max-height: 360px;
+      background: var(--bg-tertiary);
+      padding: 16px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .reference-left .page-title {
+      margin-bottom: 4px;
+    }
+
+    .url-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+    }
+
+    .status-row {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .structure-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .check-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      border: 1px solid rgba(108, 99, 255, 0.12);
+      border-radius: 8px;
+      background: rgba(28, 31, 58, 0.52);
+      padding: 9px 10px;
+    }
+
+    .check-item input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="color"] {
+      width: 46px;
+      height: 38px;
+      padding: 4px;
+    }
+
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .settings-nav {
+      position: sticky;
+      top: 28px;
+      display: grid;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--bg-secondary);
+      padding: 10px;
+    }
+
+    .settings-nav button {
+      min-height: 38px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      background: transparent;
+      text-align: left;
+      padding: 0 10px;
+    }
+
+    .settings-nav button:hover,
+    .settings-nav button.active {
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .settings-section {
+      display: none;
+      max-width: 880px;
+    }
+
+    .settings-section.active {
+      display: grid;
+      gap: 16px;
+    }
+
+    .settings-card {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+    }
+
+    .profile-avatar {
+      display: inline-grid;
+      gap: 8px;
+      justify-items: center;
+      width: max-content;
+    }
+
+    .avatar-large {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      font-size: 26px;
+    }
+
+    .avatar-large::after {
+      position: absolute;
+      right: -2px;
+      bottom: -2px;
+      display: grid;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      border: 2px solid var(--bg-secondary);
+      border-radius: 50%;
+      content: "";
+      background: var(--bg-tertiary);
+    }
+
+    .camera-dot {
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      z-index: 2;
+      width: 14px;
+      height: 14px;
+      color: var(--text-primary);
+    }
+
+    .link-button {
+      border: 0;
+      color: var(--accent);
+      background: transparent;
+      padding: 0;
+      font-weight: 700;
+    }
+
+    .swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .swatch {
+      width: 34px;
+      height: 34px;
+      border: 2px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+    }
+
+    .swatch.active {
+      border-color: white;
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+
+    .radio-row,
+    .toggle-row,
+    .integration-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .chip {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text-secondary);
+      background: rgba(28, 31, 58, 0.62);
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .chip.active {
+      color: white;
+      border-color: var(--accent);
+      background: var(--accent);
+      box-shadow: 0 12px 30px var(--accent-glow);
+    }
+
+    .switch {
+      position: relative;
+      width: 48px;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--bg-tertiary);
+    }
+
+    .switch::after {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 18px;
+      height: 18px;
+      content: "";
+      border-radius: 50%;
+      background: var(--text-secondary);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .switch.on {
+      background: var(--accent);
+    }
+
+    .switch.on::after {
+      transform: translateX(20px);
+      background: white;
+    }
+
+    .integration-card {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid rgba(108, 99, 255, 0.16);
+      border-radius: 8px;
+      background: rgba(28, 31, 58, 0.45);
+      padding: 12px;
+    }
+
+    .danger-zone {
+      border-color: rgba(255, 92, 106, 0.7);
+    }
+
+    .danger-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      border: 1px solid rgba(255, 92, 106, 0.25);
+      border-radius: 8px;
+      background: rgba(255, 92, 106, 0.06);
+      padding: 14px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      inset: auto 10px 10px;
+      z-index: 50;
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(19, 21, 42, 0.96);
+      padding: 8px;
+      box-shadow: var(--panel-shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .bottom-nav .nav-item {
+      justify-content: center;
+      min-height: 44px;
+      border-left: 0;
+      padding: 0;
+    }
+
+    .bottom-nav .nav-item span {
+      display: none;
+    }
+
+    .toast-stack {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 120;
+      display: grid;
+      gap: 10px;
+      width: min(360px, calc(100vw - 36px));
+    }
+
+    .toast {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(19, 21, 42, 0.98);
+      padding: 12px;
+      box-shadow: var(--panel-shadow);
+      animation: toastIn 0.2s ease both;
+    }
+
+    .toast.closing {
+      animation: toastOut 0.2s ease both;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateX(16px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes toastOut {
+      to { transform: translateX(16px); opacity: 0; }
+    }
+
+    .toast-icon {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--accent);
+      font-weight: 800;
+    }
+
+    .toast.success .toast-icon {
+      background: var(--success);
+    }
+
+    .toast.error .toast-icon {
+      background: var(--danger);
+    }
+
+    .toast.info .toast-icon {
+      background: var(--accent);
+    }
+
+    .toast button {
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      background: transparent;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 110;
+      display: grid;
+      place-items: center;
+      background: rgba(5, 6, 14, 0.68);
+      padding: 22px;
+    }
+
+    .modal {
+      display: grid;
+      width: min(460px, 100%);
+      gap: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-secondary);
+      padding: 20px;
+      box-shadow: var(--panel-shadow);
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-head h2 {
+      font-size: 20px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    @media (max-width: 1180px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .history-panel {
+        position: static;
+      }
+
+      .projects-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .split-workspace,
+      .reference-workspace {
+        grid-template-columns: 340px minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 940px) {
+      .split-workspace,
+      .reference-workspace {
+        height: auto;
+        min-height: 0;
+        grid-template-columns: 1fr;
+      }
+
+      .left-panel,
+      .reference-left {
+        max-height: none;
+      }
+
+      .right-panel,
+      .reference-right {
+        min-height: 760px;
+      }
+
+      .settings-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .settings-nav {
+        position: static;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        overflow: auto;
+      }
+
+      .settings-nav button {
+        text-align: center;
+        white-space: nowrap;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+
+      .bottom-nav {
+        display: grid;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 20px 14px 86px;
+      }
+
+      .page {
+        min-height: calc(100vh - 106px);
+      }
+
+      .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .stats-grid,
+      .projects-grid,
+      .mock-cards,
+      .mock-footer {
+        grid-template-columns: 1fr;
+      }
+
+      .mock-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .export-bar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .export-actions {
+        justify-content: stretch;
+      }
+
+      .export-actions button {
+        flex: 1 1 160px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .url-row,
+      .danger-row,
+      .integration-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .auth-page {
+        padding: 14px;
+      }
+
+      .auth-card {
+        padding: 24px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .editor-tabs,
+      .preview-toolbar,
+      .code-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .tabs,
+      .sub-tabs,
+      .mode-tabs {
+        overflow: auto;
+      }
+
+      .mock-preview {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <svg class="icon-sprite" aria-hidden="true">
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 10-13h-7z"></path></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.1 0l2.1-2.1a5 5 0 0 0-7.1-7.1L11 4.9"></path><path d="M14 11a5 5 0 0 0-7.1 0l-2.1 2.1a5 5 0 0 0 7.1 7.1L13 19.1"></path></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5z"></path><path d="M19.4 15a1.8 1.8 0 0 0 .4 2l.1.1a2 2 0 0 1-2.8 2.8l-.1-.1a1.8 1.8 0 0 0-2-.4 1.8 1.8 0 0 0-1 1.7V21a2 2 0 0 1-4 0v-.1a1.8 1.8 0 0 0-1.1-1.7 1.8 1.8 0 0 0-2 .4l-.1.1A2 2 0 1 1 4 16.9l.1-.1a1.8 1.8 0 0 0 .4-2 1.8 1.8 0 0 0-1.6-1H3a2 2 0 0 1 0-4h.1a1.8 1.8 0 0 0 1.7-1.1 1.8 1.8 0 0 0-.4-2l-.1-.1A2 2 0 1 1 7.1 3.8l.1.1a1.8 1.8 0 0 0 2 .4H9.3A1.8 1.8 0 0 0 10.3 3V3a2 2 0 0 1 4 0v.1a1.8 1.8 0 0 0 1.1 1.7 1.8 1.8 0 0 0 2-.4l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.8 1.8 0 0 0-.4 2v.1A1.8 1.8 0 0 0 21 10h.1a2 2 0 0 1 0 4H21a1.8 1.8 0 0 0-1.6 1z"></path></symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4 16 7h3a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9c0-1.1.9-2 2-2h3l1.5-3z"></path><circle cx="12" cy="13" r="3.5"></circle></symbol>
+    <symbol id="i-attach" viewBox="0 0 24 24"><path d="M21.4 11.6 12 21a6 6 0 0 1-8.5-8.5l9.9-9.9a4 4 0 1 1 5.7 5.7l-9.9 9.9a2 2 0 1 1-2.8-2.8l9.4-9.4"></path></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"></path><path d="M22 2 11 13"></path></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5"></path><path d="M14 11v5"></path></symbol>
+    <symbol id="i-open" viewBox="0 0 24 24"><path d="M14 3h7v7"></path><path d="M10 14 21 3"></path><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h5"></path></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"></rect><rect x="3" y="3" width="12" height="12" rx="2"></rect></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"></path><path d="m8 6-6 6 6 6"></path></symbol>
+    <symbol id="i-view" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 6.1-1.5 6.1-6.6a5.2 5.2 0 0 0-1.4-3.6 4.9 4.9 0 0 0-.1-3.6s-1.1-.3-3.7 1.4a12.8 12.8 0 0 0-6.7 0C6.7.4 5.6.7 5.6.7a4.9 4.9 0 0 0-.1 3.6 5.2 5.2 0 0 0-1.4 3.6c0 5.1 3.1 6.3 6.1 6.6a3.4 3.4 0 0 0-.9 2.6V22"></path></symbol>
+    <symbol id="i-vercel" viewBox="0 0 24 24"><path d="M12 4 22 20H2z"></path></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"></path><path d="M13.7 21a2 2 0 0 1-3.4 0"></path></symbol>
+  </svg>
+
+  <section id="authPage" class="auth-page">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <div class="brand">
+          <img class="brand-logo" alt="ArchiteX logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABNCAYAAABZqmHQAAAZVklEQVR42s2de5RkVZXmf/uc+4jIR2EhFiSvdlg90iQtOuPo6KhdpaKj9LRir44Un/UkgcoqEGlGWtTI6MfgiEhBVdYjGjLBx0IqWrtXq2vU9kHio2d0XLbOImynWwa1NIsCSTqrMiPi3nvOnj8iEkq0Mm6+qvqulX/lirj3nrP3Pt/+9rd3CKf4KpfVVCriRzbrh+MCN7YSnIBVRa1FnONxMdyE8iERzhDBhyG3JBkTP/gRP9mwAV+piD9Vz331Fr2wEPKg95zhHCKCLPQ57/FRhDEBF350TP6vnNrlVwHRG67Wda2MRwwUnILw9EuIQBxBKwFVUMX3FDFzDQ6lARcMDOD+tCJeT/Li8wDm8Qu5yHi+ZC1npSleBLPg2ypqDCJCIoYL7zjAT8ypXP7hYYJyWU0z4eZiTOw92fGLP//QjSaZKtrZEDM3RxrHnBtmbAW4v6T2JD+6qUxKZjLuLMaclaWk3RYfUDG4wNLyyqV3HJBHSiWMnMrQA/DEP3O26eUh5+ijvfiS03WyQpGw2eRlh/+F7wweQSqTkp2s0LNjq94QhfxZmhIohF0fWHGFArbZ4CtjE3IpqAHxp8wD6nWkUhGfRbw3CFgDaM7FBxCn2CwF57m5VhPHBk7aOXDN23Qt8KHMUVQIcnzExRFkGQ/1CG8ulzV6ypVOlfUPDqIjm/T5UcQVWYZTZVHeaASTOVwU8PprNumLKxV03qtWL2RqWKmINwVuLhYQ70nyGI0qKoJNU8ZuHZejDzyAhzZwMKfI+oNKBRXDSwsxZ2QZLkcM/fUX8/ggwAYBN4FovZ7LGpd0lUpqp6fx27foa8KQdzVbCPlCT9bTQ9BscefeCdlXKmk0eVyoPCUbMDhIBqKqXN5qobDEhRPCRhMfhvzhyGYdrdUkKa3SgXzwIL5WEyfCPmt4jvOdJ1j48kGApinTXti/fr0G7Xc//hVOEX7esU1fGQU82ErQbti5i4X5IACFR63w4lnlyMAAbiVzg3JZA4DHf8aHo4iRNMXkNBrX24s9eoyJveOypVRSW6uJ+5VQerI3YGoKu3GjFkT5oDE4wC3n+0QwLsMVIgZaKRurVUlXNhSpqVQkm3qYs+OY67OUKOfiZ0GAzs3xqeecx/DwsIbPXPyT7gHzFrBjq748jplsNlGRFVksBXxgydKMobFx+dvfZG2LtnzU1EvI2rWs64EvIFyUptg8mN9aJHM0xu6WngXBxEmO/QrglQtVWclYLR3qIraWmzr3su10YRnXekythg8zhuKYS5IEyZVwQWYNM6pcVSqpPXjwxOeSnPzsV8Mo42c24Mws656+d0KUyQn3XCHGNlonjrlLuXZu1cfFsDYX16Nk/b0Ex2b57Ni4vLFc1qBSOXGCKCdz4atVspFtXFeMuLXZRJGFYZxqm7hyDrzPFYjUGLwYWs7zu3vu4pFyuZ3wLZajGh4mAMLYcVcQUEozBBb2WlW8taDKj5znDc85j5+PjuJERE9pCFJVOXCAbPt2eg1cl2YE3TJI7/FxjMlSbvWOKRF8J9YvBEvFeQQoCnxze4ne+fsv7qzCVKuSkvGCYpG3Jm3UY3MAgqynB6MpH947Lj+ZmkIWWvyTtgFDQ+37mBZXxhHP7YQeWciSwhBUecTN8KcI+/r7MShZLlTk8FHIgPazuVIRXxvK/56lktojR5DrtuiFPSH3t5qkIrngsIsiomPHuGPPvdxbXq9BtSpp14z+ZGzA2ocxIqJOeYtvp+Xd2GMNLKbV5O69NTmWhRw4dpTJICRUzcX5mCQl6e/hzpGtuqF2HJbv+qxrMZOTkmWeK6OQ8zoJl8kRelSVuVi5vVxG8nJT5mRAz4Hv4q7dqpcUY87NMnyX+6ox2EaLJ20/t4LK/v1yJBVutJZEJFfeIKrYNAM8f9I5iLsuyPqO1Y5s0m2FIjfMzpF1O6c6XqfWEMzO8YbbxuUn80Tjv4oNAKggPlNGrOEc57qwnkrWUwALf3b4MNnwMEGppJET/qHZ4is9RULNEYoAm2W4MOJ1V2/Ul1Yq4hemKVQ2rMNcv1VPtyE7vOJyZuguCrFpwoPVj8mD5bKaxSCvVd6A9sNcO6znG8OVjSZ+ocSrQysEzRb1KOITg4PogQNkg4Nk1aqkRrm52eIXxmC7Hsjtg1y8JysU+LtrNul5x9chftPBW6lJ0kx4bSHmBa0EzYN6ggBxnv8Xp1w2/CINR0dZVHFulelbbLmsxntG4whFFw4fIqgxaOaYuW2/HKnX2yiiUhE/PKzh7nH5nvOUCzEKpDkPZLGWPhFGajVx9fqvW/W8Z2zfor8X93Kg0SQzkiNRFFQEkyTccdsnZPbSC/DdUM9J24BSSW21SjZziAvCgD9KEpQutIMqiMGI52ZQmc+cAapVsuFhDXuU+5stHglDopw8kkkzXBBy5cg79dmDg79aN5gPGf399Fj4snpO8x7bNUdS0r4ebJowse8euaNU0mhoCUmfWU3aoWOmHxSh3/uFy42qZIUYmyZ8LVzL369fj61Ujndn0YEB3K3jctR5RlVp5glDIojLECOcriHfmJrCtj2r/f+LL0Z27tS4R/hgGBE61z32q6JikFaLn4rykU6BaUnlULOaJUdpc/6vzJPFGoN45aj33Hb77dJYtw6FX3XnzkEa7R2Xj7uUe/t6CdB8oShJ8cUCvxOkvKlWE3f//WrLZQ1qNZAGr+3v44+TlCRPwgW4vl6CVsb23RNSf+ABzFLpb1klzj+oVCQb2aZvLkZ8vNkiXojCVUVtAFnKzN4JeVY3mqBUwqwtcE6xwOeBizKPke7voiKkYYSdO8qL939cvjfPFW3fot8NA16YZe3N6ppwheA99/kCI60WjWq1XWD6V7MBpZLawUHkl4d4MAp5WZLiFrIsVVyxgG222P/scxmZt/YTbvB6DSqTku3coq/r6+eLR4+S5sHrqrg4xrZa3HfkKJvWrkUjx+VhwME0W/gZn8K2ts1LzaQU771XmvPapqWulVmNiletJu6xR7g0jnhZM8F3WXw1BrznF1juGB1FL64vbBiVScnKZQ2C0/j6zCy3h1G+DFkE22qRnLaGt67r56reXoJCzEHnnmJcu3mQM4ZZr7w9jnHt7FqWpQmT1Qg/jzxCsCbgq1HES5oJKgsRb0paKBI0mnxh7G65rM2adudQ2oyGaKmkxXVrOCzQl8eg5hlL73gY4WFreF3mcpVFXRAgacpXx8bltStFdZuVXvx6He03vCou8OJWCy/dWE/Feo8Y4Uugcul0Pg6ls/gRkAAf6u/HqNLKmRsYG/DbUZR78VFFoxBjDTd1QuyKqCFlNbSeI1v0f4chL8rJ+0iWcSgLuaBaJdPO4ua9X7mMTE1xekH5TBjwykYTb0w+T+hQ3EEuaUmRoNnkVnr4wOHDZCth/Su6AW2XxO/cRsla7suy7qk8SlrswbaajKw9h+rUFDZP+PlNm75li/b3WyaN5YVpuvC5s0jVRVYoEDSb7Bsbl+2oCiIrpgVeyRBkQdR7XhmHmG5Zqio+CAkbTX7cNHysne0udvHbCdrwsIbj43I0TdkjoOjKyBQVvLV4rxw1yp5yWYODtZUN22alKl6Ae8+wnhEEXDbXxJNDNSagqvyiWpW55dy/WpW0XFaz9x4Zb7Y4nBcV5bB+wpCo0eDy3RNSHx3FDw2tTOhZ0Q0YGsLUauKSlG1RyAXe5xLaqghiHTfOZ87LJv9epKGBy1AeDQJy1QC60Mw0m3zDR3y9XNZAZOUbQcxKHLyDg+jVV+s6E7Cjk9B0JbJ6itg04/P/ovyfE4mWFnNVKuIH+tA9E/L9ZsLfFAqEebiiBaCqVc8vTS+XtpV2OFbhMivRZFGvI0HCxjjmnKx7p4jSVgofVeWWe++V5sDAyrxcZRI3PKyhC9k5O8unw/ApWcti1XZqDC5zfGj3bmm1vVNWpQlHVgJ27typsZ/jsBGepZrjQwLe0RibkF5Wqe0JYOc2PWSEsztY3+Q8edO4QJgkfGL3XfLOUkmjWk2S1SItl+UB69e3oZ7O8oE44lmq3a2t0ykixrCrXNZgIdXYUkVypZLaclmN8+y3AYIsIhS1rR/nmAY466zV1U4tawMuvBApl9UgPN+adrbYLbaGAZKlHMYyDviHHmLFXbtWE1epiLeGt3nXCXr543+QJPgo4hVbr9Azd++W1mo2fgRLt34NpqfxgeeSYsSrGk2ybkLbTmyVVpP7xu6RH3eT7S1VgRfHGGa5JQh4XpriRPInZSKYNMUXi/y7vn6+eP1V+vvAo6qqIit/Dix5ZzdsaDcs4Hgf0J+nxUgVi2K0hw9rWzjrV74MKmn6BM+Ni1yfptilZMTGYJpNWsUeXpAkbK9UJBsa6p7XnLRDeL7J4tqteokxfNspgerCAtqO2s04xw9wXHr6+fxydJQVs6pyWc3UFNYmnBVHfE6Fi7J8UvIFcwFjcD7lrXvukc/Mv/cp94CpKWyppJFTbgxCYvX4bptpBBcEpOq4bfeEPDY1hV1hl27rOYW3Fgpc4tLu1a0cVISGAZEJeT/A2VMrIHlfrgfMW8G2d+rz+nr4UZLiTfcyng8CJMv457Fxed58j+xKN35s36RvimP+KsvaLMIKfb0LQ2zS4pNjE/KOlaoDLN0DHmh/Jg75sBjU5IB4Cj6OEBFu7oigZDmH7K9aocog2HJZg8BygzFYrysKHW2a4m3AW6/ZrBfUauJWEhUt3gPWazCzjjBbw4NByH9I0661VBcGGOf5hvVcfmiGY0eO4NuqBxbdqfjMsDVvkSNb9N5igXc1mvlQjz69i5KzEVAFHk1DLjlyhCd/07OsOgztKIx99lP+II75981m92K4KhoESDJH/c4JeWKZDXlce6Vux/PpO++WR9ev1wDQnZt10Ia8KUnJci1+Z2iGan5ommW4YoGz01k21mry0aEhtcttMFxKHuArFfEjW7ScZZg8/iOCbbYAw1t2bNH/2CELlmY5ipx+Gi98bJo68OiGDfipKazP+LpRTnM5youqaBggqWMWpccIqjlCsQimmZD09HHbjs36wz0T8j9WIo+RxSRek5OSjWzRK+KY+5Ikn4zjOGyNtcvj5gMLacbXWoYrzjyTJ+t13Lp+rotjbpufM5SDKHJBwJxzvNp5XtFTZNdcI2fYardMSZryYFH5g2//mMbkJO4kyFJUNmyAnTt1jQ14d7sGszgr9h5NU9xi/5IEn6Y470hbCe4X07xx/345UqlIcuYaXtrby21pQir5FBGur4+gmfDuO++S70Yhf5WmHAkCNKesxbRauL5e1s/CRyYnJev0kq2uBxxX731jHPM3jcbi0vsVQAppoUB4bI73rzufW+p1grVrKRY8f20M65OsPbwjT0c98JUGvG16mplaTZJrtupFkaXuPS5n66waQxoEPNlMePlzzuXheh1ZKjQ1+ft7RZ3nv6XZosbKrAwOjwibLW7aNyF/MVMnrtUkCTPe19vLq9KMzORLuEQV41PeXq3K44ODZKWS2n13yw/TlE+HIXkPVXEOaw3r8OxYbmacp/1MVGFkE2fakP9lDOdl2SL49eXVZLXTAPGkjzgvy2hNT+PXreHVQcCnvGNNx2q7V+B6CWfn2Jta3j09jdRqkhw8qPahh9Anfs5LopBvJSmpKmFOA0v6eoiOHuXKsXvkrnJJo8oS6gYmT8VraAhjDSPFIue7jOxkLD6g1uBEmPPwisceozFPNQvsCiyndwjArqjHBJAk/EQsu6tVSeel5END4i6+GNl9l/zPuSbviiOivGebKkEjwdmId19xhZ5ZqUmylARNuqkdRkeR1hFOO5ZwCOg5WXHnqRFfTe4fG5crhoc1HBjAPXaIXXHI1WmK5J1Y0teLfeJJXl39mHxtHs0d/45DQ5hzIUrX8P0g4N/mGcDXUfX5YgGTZfzANLlszb9hChYWFi/KA0ZHsZWK+JkGN8URPZo/8XDL+VOlFbfh3rfPOI93bNyohWpV0iP/yDlxwM40Jcyr4w9DmJvj40Ef3xke1rANG49HNqKDg+jtNZpZi1d45ai1+DyeYKRDWxe4JLW8s15HpqYWB06k21C9Jx/hfCnyDTxnpVmuYRVE4TKPaW1nvY0mb9k7IQc3btRCby/Pih1fVnhe3oklIqgqs3vuljXPrBefiNAb2aQf7evn+tm53HmOdvRNc3vGOa1NMuaXrMuJeRe1tRqc2c/7e3oYnZ3rXvGapwtU+XtyNNGdYO2zYkTQaDA+do/c+/rXa/yFL0jr6s06sqaPPcdmyYzk0nO2+vuIj83y3mefy0e6yx7b8yGqVUmv3aa3WssNSZobbLgwBOf45Nqz2dy+V76mja52un2zzlhLX4c3ka5KN5hNLKcvTWb4a1YZ1WqSbN+qry9EfC5N8J0ZE90OXl+I28WfRpPLzsodm59mWUc287ixPCvPQT9/z95ezOwx7hmbkM15aWtZcKzYu/QltsiXfEa/dpvp+TTUe/8Z5/LfZ+qEa44szQvYAPU6unZt2/oiz+ejkNe2Wt0TwE7lTb3nH2eP8pq7PyWPLqaS1ZG8u3X97FjTz65FdN+oNWRiaTrlJY9O80+Dg2i3+8qChe0GnyrEXN5oLPwQ8wUXVX6cJbxy7B4ebXchLp0jmcfVI5t1f28vV83O5c6+k75eopljbN07LuOLx+dtyfsTP+XZJuA+ETZkbl583F1TVOwhnJ1l/94JuSaPpsj8JusfGMCRMhgEXD47h881LwHUOY7tvVcOj44uT0lWLqup1CTpzBV9cyshzdlE4QoFoplj7No7LuOlktrFJ0ft5949IY/NZAwHATY3ZyaEcw1cIebqa7bo9vlkb1EbMD9owiXc0mEx8yykBgFGLO8DleUIbctlNfU6MrJJn28DvqqwLstyLYJai3OeIzZgz/xwWJaoMy2XNTj/GIeaLd4ThqSyCFChig8t197wDu398pcxC80rMs8suNRq+O3D+opizMuzjCzHqJasEGNbKd/0IV8vl7G12tLlJvU6Qa0mDsNoocAZaUqSB4moJ+stEqVNPrO7Kj+emmrnMCxd7JtVapLsuVtuTxJ+HkaE3udgTMGmGRoEXNgI+dtqVdLR0ROHL/OMl29bTMZ7ROjr1t1+XIP1XJby0b175Vj7O5YWfjrIIdm+RW8MI9441yATIcpJ2AUzs0xKwnvnxySsRLF/eFhDCXmzV34ehricfQc2SXBhyIZrNul/qlQkOxFNYX51sgl+5xZeGIW8udEeKWlzjIs0rQSz7x75zDxXs9Qmj8FB9PqSFsOAG9VjO1qjPCMrXdTWgN6y+5My00ZPy6/Xzr/LngPy/TThYCHO3/ihikHRKOLLO7bpq+v1jozzRBswPNxuMVLh5sDi81Czqrg4QgzcNzys4XLGBo9uwE5NYZN+virCGc7l42NU8XFMdKzJe8buki/Oq+NWipOqViUdHtbwjPP4r8fm+HyxSJBHhCyCZA61lqIoYyea1GLmodf0NP6ma3SttZyVZzxjh61ElWkj7KpWyUqlJbc4mcqkZGHChkKBlyZpjga/pxspJE05rBH3tGd0rvwY+4EBtFKRzCi3Kcx2Jv7mGRQSJAlZEHLB9q162+AR5Jmj0wy0Zea1Gn4u4Q2FmJe38tV7XRhimw2+cOfd8oNyGbuU/qmDB9WOjsL2d+nFUZG/7hy6ueKOaeuSXJrx8n37ZHpwkFUR0FYqkpVKanePy9caTb5XiIkW0YMWZBlRIeQ9Pz+Xs9pF/KdDkQGYLyw75S+arXz8R2cmm0jAzcsR2j70UBv2qmWnFXqdw+ap76JtA0hTDu6bkIdLJbWr+WM+nTlDgQt4eyvlh2GYr448P4LTK2lfL5/74416VjvctzfBtJVmoju26JXFIud4l6PgoqS9PYjz3J0YDl01TLCUl+/8IEK2Y6vuOK2fq5pNkryiqs6P4bjA8pFSSe3gkdUtk86/X7UqP00zDsQRAZIPaXWmakkc84JZ4Q+rVUnXr++M8pyext9wg/aK5bosJfTalWtRY7FJymGr7KpWJV1Kj5eqysAAet1Gfa6xjDSbuJw/B4KAN4Zsbo6hO+6SfxgcRE/G78d04GSwb1zumDnGgWI7FGU5ZTl2bo60WGTXyCb9z5OT7bAmADu36dvjmE/MzXVv8+80WEuW8rOxcfmt+aEZLKHBY3JSspHNOtnTy+/N5aS75/mWuVn+fGxCPrDaPVwnmi830M9FQcy3sozYe4Kcg0KyQkyQpPxd0M+bDh3Cyc636xoKfCsI+Z007U46eSXrLRI0W1x7+jmMLUWS8dRAp626oVDgs0mLKE8xXBUNLKrwpCovOP0cDnebzcyq/JqG2qEhcSOb9LXFHr7UmQZp8p4HxSJmLuUl+/5SvmO0wBvjmIuSnGMawwCTpvxTGnB/vY4shW+p19H1ZQ1EuQGlL5eyofP81mKco7r7LjlUr68O6qF7Y7ovlzUw/TzYbPGNMETy6kSNgTQliw21q7fo7xqFS7zH5GEbOxNiaWb85f79cmRwcPGTyeebsi/+Gbt6e/kvjQZZXqq3p4hNEj47Ni5/Um6HHscpuUQrFdye3dJ69gyvUc/j1mLyjlV2Dgv8lhW+acKAG1tpLr5bRbBJwpwP2KWoLLN7/OzOhMKcslxsmjGXeW5VVOpwihb/6U34ow7dnXlutyZ/O6wIkqaoNaz5/+D9e8bXPtkNAAAAAElFTkSuQmCC">
+          <span class="brand-text">ArchiteX</span>
+        </div>
+        <p>Turn ideas into architecture</p>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Authentication tabs">
+        <button class="tab active" data-auth-tab="signin" type="button">Sign In</button>
+        <button class="tab" data-auth-tab="signup" type="button">Sign Up</button>
+      </div>
+
+      <form id="signinForm" class="form-panel auth-tab-panel" data-auth-panel="signin">
+        <label class="field">
+          <span>Email address</span>
+          <input type="email" placeholder="you@example.com" autocomplete="email" required>
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <span class="input-wrap">
+            <input class="with-toggle" type="password" placeholder="Enter password" autocomplete="current-password" required>
+            <button class="password-toggle tooltip" type="button" data-tooltip="Show password" aria-label="Show password"><svg class="icon"><use href="#i-eye"></use></svg></button>
+          </span>
+        </label>
+        <button class="action-button" type="submit">Continue</button>
+        <div id="otpPanel" class="otp-panel hidden">
+          <p class="success-text">OTP sent to your email</p>
+          <div class="otp-grid" aria-label="One time password">
+            <input inputmode="numeric" maxlength="1" aria-label="OTP digit 1">
+            <input inputmode="numeric" maxlength="1" aria-label="OTP digit 2">
+            <input inputmode="numeric" maxlength="1" aria-label="OTP digit 3">
+            <input inputmode="numeric" maxlength="1" aria-label="OTP digit 4">
+          </div>
+          <button id="verifySignin" class="action-button" type="button">Verify &amp; Sign In</button>
+        </div>
+      </form>
+
+      <form id="signupForm" class="form-panel auth-tab-panel hidden" data-auth-panel="signup">
+        <div class="form-grid">
+          <label class="field full">
+            <span>Full Name</span>
+            <input type="text" placeholder="Arjun Mehta" required>
+          </label>
+          <label class="field">
+            <span>Age</span>
+            <input type="number" min="13" placeholder="24" required>
+          </label>
+          <label class="field">
+            <span>Mobile Number</span>
+            <span class="mobile-row">
+              <select aria-label="Country code"><option>+91</option><option>+1</option><option>+44</option></select>
+              <input type="tel" placeholder="98765 43210" required>
+            </span>
+          </label>
+          <label class="field full">
+            <span>Email Address</span>
+            <input type="email" placeholder="you@example.com" required>
+          </label>
+          <label class="field">
+            <span>Password</span>
+            <input type="password" placeholder="Create password" required>
+          </label>
+          <label class="field">
+            <span>Confirm Password</span>
+            <input type="password" placeholder="Repeat password" required>
+          </label>
+          <label class="field full">
+            <span>Category</span>
+            <select required>
+              <option>Developer</option>
+              <option>Student</option>
+              <option>Designer</option>
+              <option>Architect</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label class="field full">
+            <span>Address</span>
+            <textarea rows="2" placeholder="Your address"></textarea>
+          </label>
+        </div>
+        <button class="action-button" type="submit">Create Account</button>
+      </form>
+    </div>
+  </section>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand">
+        <img class="brand-logo" alt="ArchiteX logo" src="data:image/png;base64,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">
+        <span class="brand-text">ArchiteX</span>
+      </div>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-item active" data-page="dashboard" type="button"><svg class="icon"><use href="#i-grid"></use></svg><span>Dashboard</span></button>
+        <button class="nav-item" data-page="generate" type="button"><svg class="icon"><use href="#i-spark"></use></svg><span>Generate</span></button>
+        <button class="nav-item" data-page="reference" type="button"><svg class="icon"><use href="#i-link"></use></svg><span>Reference</span></button>
+        <button class="nav-item" data-page="settings" type="button"><svg class="icon"><use href="#i-gear"></use></svg><span>Settings</span></button>
+      </nav>
+      <div class="sidebar-user">
+        <span class="avatar">AM</span>
+        <span class="user-meta"><strong>Arjun Mehta</strong><span>Developer</span></span>
+        <button class="icon-button tooltip" type="button" data-logout data-tooltip="Log out" aria-label="Log out"><svg class="icon"><use href="#i-log-out"></use></svg></button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <section id="dashboardPage" class="page active" data-page-section="dashboard">
+        <header class="page-header">
+          <div class="page-title">
+            <h1>Good morning, Arjun Mehta</h1>
+            <p>Here's what you've been building</p>
+          </div>
+          <div class="backend-pill" id="backendStatus"><span class="status-dot"></span><span>Backend checking...</span></div>
+        </header>
+
+        <div class="stats-grid">
+          <article class="stat-card"><span class="stat-icon"><svg class="icon"><use href="#i-spark"></use></svg></span><span class="stat-number">12</span><span class="stat-label">Projects Generated</span></article>
+          <article class="stat-card"><span class="stat-icon"><svg class="icon"><use href="#i-link"></use></svg></span><span class="stat-number">4</span><span class="stat-label">References Saved</span></article>
+          <article class="stat-card"><span class="stat-icon"><svg class="icon"><use href="#i-download"></use></svg></span><span class="stat-number">8</span><span class="stat-label">Exports Done</span></article>
+          <article class="stat-card"><span class="stat-icon"><svg class="icon"><use href="#i-user"></use></svg></span><span class="stat-number">Today</span><span class="stat-label">Last Active</span></article>
+        </div>
+
+        <div class="dashboard-layout">
+          <section>
+            <div class="section-heading">
+              <h2>Recent Projects</h2>
+              <a href="#" data-route-link="generate">View all -&gt;</a>
+            </div>
+            <div class="projects-grid" id="projectsGrid"></div>
+          </section>
+
+          <aside class="panel history-panel">
+            <div class="section-heading">
+              <h2>Recent History</h2>
+            </div>
+            <div class="history-list" id="historyList"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="generatePage" class="page" data-page-section="generate">
+        <div class="split-workspace">
+          <aside class="left-panel">
+            <div class="input-panel">
+              <textarea id="architecturePrompt" class="prompt-box" rows="3" placeholder="Describe your architecture, paste a diagram description, or type a prompt..."></textarea>
+              <div class="input-actions">
+                <button class="icon-button tooltip" type="button" data-tooltip="Capture whiteboard" id="cameraButton"><svg class="icon"><use href="#i-camera"></use></svg></button>
+                <button class="icon-button tooltip" type="button" data-tooltip="Upload image or doc" data-open-file="generateFileInput"><svg class="icon"><use href="#i-attach"></use></svg></button>
+                <button class="action-button send-button tooltip" type="button" data-tooltip="Generate" id="sendGenerate"><svg class="icon"><use href="#i-send"></use></svg></button>
+              </div>
+              <input id="generateFileInput" class="hidden" type="file" accept="image/*,.pdf,.doc,.docx">
+              <div id="generateFileState" class="hidden"></div>
+            </div>
+
+            <div class="drop-zone" data-drop-zone="generate">
+              <svg class="icon"><use href="#i-camera"></use></svg>
+              <span>Drop whiteboard image here or click to upload</span>
+            </div>
+
+            <section id="detectedPanel" class="detected-panel hidden">
+              <div class="panel-title">Diagram Understanding</div>
+              <div class="nodes-list" id="nodesList"></div>
+              <div class="connections-list" id="connectionsList"></div>
+            </section>
+
+            <section id="scorePanel" class="score-panel hidden">
+              <div class="score-display">
+                <span class="score-number" id="scoreNumber">8/10</span>
+                <span class="muted">Architecture Score</span>
+              </div>
+              <div class="progress"><span id="scoreProgress"></span></div>
+              <div class="warning-list" id="warningList"></div>
+            </section>
+
+            <section id="timelinePanel" class="timeline-panel hidden">
+              <div class="timeline-heading">
+                <div class="panel-title">Agent Timeline</div>
+                <span class="pulse" id="timelinePulse">active</span>
+              </div>
+              <div class="timeline-list" id="timelineList"></div>
+            </section>
+          </aside>
+
+          <section class="right-panel" data-workspace="generate">
+            <div class="editor-tabs">
+              <div class="mode-tabs" role="tablist" aria-label="Generate output mode">
+                <button class="tab active" type="button" data-output-tab="generate:code"><svg class="icon"><use href="#i-code"></use></svg>Code</button>
+                <button class="tab" type="button" data-output-tab="generate:view"><svg class="icon"><use href="#i-view"></use></svg>View</button>
+              </div>
+              <span class="muted">Backend architecture output</span>
+            </div>
+
+            <div class="code-shell output-panel" data-output-panel="generate:code">
+              <div class="code-toolbar">
+                <div class="sub-tabs" role="tablist" aria-label="Code language">
+                  <button class="tab active" type="button" data-code-tab="generate:html">HTML</button>
+                  <button class="tab" type="button" data-code-tab="generate:css">CSS</button>
+                  <button class="tab" type="button" data-code-tab="generate:js">JavaScript</button>
+                </div>
+              </div>
+              <div class="code-editor">
+                <button class="icon-button copy-button tooltip" type="button" data-copy-code="generate" data-tooltip="Copy code" aria-label="Copy code"><svg class="icon"><use href="#i-copy"></use></svg></button>
+                <pre id="generateCode"></pre>
+              </div>
+            </div>
+
+            <div class="preview-shell output-panel hidden" data-output-panel="generate:view">
+              <div class="preview-toolbar">
+                <div class="select-modes" data-select-modes="generate">
+                  <button class="ghost-button mode-button active" data-select-mode="click" type="button">Click</button>
+                  <button class="ghost-button mode-button" data-select-mode="drag" type="button">Drag</button>
+                  <button class="ghost-button mode-button" data-select-mode="section" type="button">Section</button>
+                </div>
+                <span class="muted">Live preview</span>
+              </div>
+              <div class="mock-preview" data-preview-area="generate">
+                <div class="mock-page">
+                  <section class="mock-component mock-nav" data-component="Navbar"><strong>ArchiteX Generated</strong><span>Docs</span><span>Services</span><span>Deploy</span><button class="section-edit" type="button">Edit this section</button></section>
+                  <section class="mock-component mock-hero" data-component="Hero">
+                    <div><h2>Architecture generated from your diagram</h2><p>Service contracts, Docker files, and README output are prepared for export through the connected FastAPI backend.</p><span class="mock-cta">Open repository</span></div>
+                    <div class="mock-visual"><svg class="node-graph" viewBox="0 0 120 78"><path d="M20 38h34M66 38h34M60 18v40" stroke="currentColor" stroke-width="3" fill="none"></path><circle cx="18" cy="38" r="12" fill="currentColor" opacity=".16"></circle><circle cx="60" cy="18" r="12" fill="currentColor" opacity=".16"></circle><circle cx="60" cy="58" r="12" fill="currentColor" opacity=".16"></circle><circle cx="102" cy="38" r="12" fill="currentColor" opacity=".16"></circle></svg></div>
+                    <button class="section-edit" type="button">Edit this section</button>
+                  </section>
+                  <section class="mock-component mock-cards" data-component="Cards">
+                    <article class="mock-card"><strong>Auth Service</strong><p>REST endpoints with isolated user flows and health checks.</p></article>
+                    <article class="mock-card"><strong>PostgreSQL</strong><p>Generated init schema and service boundary assumptions.</p></article>
+                    <article class="mock-card"><strong>Redis Cache</strong><p>Connector configuration for fast session lookups.</p></article>
+                    <button class="section-edit" type="button">Edit this section</button>
+                  </section>
+                  <section class="mock-component mock-footer" data-component="Footer"><span>README</span><span>Docker Compose</span><span>GitHub</span><span>Vercel</span><button class="section-edit" type="button">Edit this section</button></section>
+                </div>
+                <div class="edit-panel" data-edit-panel="generate">
+                  <h3>Edit Component</h3>
+                  <small>Selected: <strong data-selected-name="generate">Navbar</strong></small>
+                  <textarea rows="4" placeholder="Describe what to change..."></textarea>
+                  <button class="action-button" type="button" data-apply-edit>Apply Changes</button>
+                  <button class="ghost-button" type="button" data-undo-edit>Undo</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="export-bar">
+              <span class="muted" id="generateOutputStatus">Output ready - 3 files</span>
+              <div class="export-actions">
+                <button class="action-button" type="button" data-export="generate"><svg class="icon"><use href="#i-download"></use></svg>Export ZIP</button>
+                <button class="ghost-button" type="button" data-delivery="github" data-source="generate"><svg class="icon"><use href="#i-github"></use></svg>Push to GitHub</button>
+                <button class="ghost-button" type="button" data-delivery="vercel" data-source="generate"><svg class="icon"><use href="#i-vercel"></use></svg>Deploy to Vercel</button>
+              </div>
+            </div>
+
+            <div class="readme-section">
+              <button class="readme-toggle" type="button" data-readme-toggle="generate">View Generated README <span>+</span></button>
+              <div class="readme-content" data-readme-content="generate">
+                <pre class="readme-body">## ArchiteX Generated README
+
+**Services:** Auth Service, User Service, PostgreSQL, Redis
+**Setup:** `docker-compose up`
+**API Endpoints:**
+| Service | Endpoint |
+| --- | --- |
+| Auth Service | /health, /login, /verify |
+| User Service | /health, /users |
+
+**Environment Variables:** DATABASE_URL, REDIS_URL, JWT_SECRET
+**Assumptions:**
+- Auth flow remains isolated behind REST APIs.
+- PostgreSQL owns user profile state.
+- Redis stores short-lived verification tokens.</pre>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="referencePage" class="page" data-page-section="reference">
+        <div class="reference-workspace">
+          <aside class="reference-left">
+            <div class="page-title">
+              <h1>Reference Import</h1>
+              <p>Clone structure from any URL and adapt it to your content</p>
+            </div>
+
+            <section class="input-panel">
+              <label class="field">
+                <span>Reference URL</span>
+                <span class="url-row">
+                  <input id="referenceUrl" type="url" placeholder="https://example.com">
+                  <button id="importReference" class="action-button" type="button">Import -&gt;</button>
+                </span>
+              </label>
+              <div class="status-row" id="referenceStatus"><span class="mini-dot yellow"></span><span>Waiting for URL</span></div>
+            </section>
+
+            <section id="structurePanel" class="detected-panel hidden">
+              <div class="panel-title">Detected Layout</div>
+              <div class="structure-list" id="structureList"></div>
+            </section>
+
+            <section class="input-panel">
+              <label class="field">
+                <span>Your brand name / content instructions</span>
+                <textarea id="referenceInstructions" rows="5" placeholder="My app is called ArchiteX and focuses on AI-generated code..."></textarea>
+              </label>
+              <label class="field">
+                <span>Primary colour</span>
+                <span class="color-row"><input id="referenceColor" type="color" value="#6C63FF"><span class="muted">Accent override</span></span>
+              </label>
+              <button id="generateReference" class="action-button" type="button">Generate from Reference</button>
+            </section>
+          </aside>
+
+          <section class="reference-right" data-workspace="reference">
+            <div class="editor-tabs">
+              <div class="mode-tabs" role="tablist" aria-label="Reference output mode">
+                <button class="tab active" type="button" data-output-tab="reference:preview">Preview</button>
+                <button class="tab" type="button" data-output-tab="reference:code"><svg class="icon"><use href="#i-code"></use></svg>Code</button>
+                <button class="tab" type="button" data-output-tab="reference:edit">Edit</button>
+              </div>
+              <span class="muted">Reference UI output</span>
+            </div>
+
+            <div class="preview-shell output-panel" data-output-panel="reference:preview">
+              <div class="preview-toolbar"><span class="muted">Generated reference page</span></div>
+              <div class="mock-preview" data-preview-area="reference-preview">
+                <div class="mock-page">
+                  <section class="mock-component mock-nav" data-component="Navbar"><strong>ArchiteX</strong><span>Product</span><span>Pricing</span><span>Docs</span><button class="section-edit" type="button">Edit this section</button></section>
+                  <section class="mock-component mock-hero" data-component="Hero">
+                    <div><h2>Reference-aware UI generation</h2><p>Import structure from a public URL, choose the sections you want, and generate a new frontend bundle through the backend.</p><span class="mock-cta">Generate now</span></div>
+                    <div class="mock-visual"><svg class="node-graph" viewBox="0 0 120 78"><rect x="12" y="12" width="96" height="54" rx="8" fill="currentColor" opacity=".16"></rect><path d="M24 26h32M24 40h70M24 54h48" stroke="currentColor" stroke-width="4"></path></svg></div>
+                    <button class="section-edit" type="button">Edit this section</button>
+                  </section>
+                  <section class="mock-component mock-cards" data-component="Feature cards">
+                    <article class="mock-card"><strong>Structure</strong><p>Navbar, hero, sections, pricing, and footer patterns.</p></article>
+                    <article class="mock-card"><strong>Adapt</strong><p>Rewrite content, colours, and layout emphasis for your app.</p></article>
+                    <article class="mock-card"><strong>Export</strong><p>Download or push generated frontend source.</p></article>
+                    <button class="section-edit" type="button">Edit this section</button>
+                  </section>
+                  <section class="mock-component mock-footer" data-component="Footer"><span>Overview</span><span>Templates</span><span>API</span><span>Support</span><button class="section-edit" type="button">Edit this section</button></section>
+                </div>
+              </div>
+            </div>
+
+            <div class="code-shell output-panel hidden" data-output-panel="reference:code">
+              <div class="code-toolbar">
+                <div class="sub-tabs" role="tablist" aria-label="Reference code language">
+                  <button class="tab active" type="button" data-code-tab="reference:html">HTML</button>
+                  <button class="tab" type="button" data-code-tab="reference:css">CSS</button>
+                  <button class="tab" type="button" data-code-tab="reference:js">JavaScript</button>
+                </div>
+              </div>
+              <div class="code-editor">
+                <button class="icon-button copy-button tooltip" type="button" data-copy-code="reference" data-tooltip="Copy code" aria-label="Copy code"><svg class="icon"><use href="#i-copy"></use></svg></button>
+                <pre id="referenceCode"></pre>
+              </div>
+            </div>
+
+            <div class="preview-shell output-panel hidden" data-output-panel="reference:edit">
+              <div class="preview-toolbar">
+                <div class="select-modes" data-select-modes="reference">
+                  <button class="ghost-button mode-button active" data-select-mode="click" type="button">Click</button>
+                  <button class="ghost-button mode-button" data-select-mode="drag" type="button">Drag</button>
+                  <button class="ghost-button mode-button" data-select-mode="section" type="button">Section</button>
+                </div>
+                <span class="muted">Editable structure</span>
+              </div>
+              <div class="mock-preview" data-preview-area="reference">
+                <div class="mock-page">
+                  <section class="mock-component mock-nav" data-component="Navbar"><strong>ArchiteX Refined</strong><span>Clone</span><span>Adapt</span><span>Export</span><button class="section-edit" type="button">Edit this section</button></section>
+                  <section class="mock-component mock-hero" data-component="Hero"><div><h2>Imported layout, original product</h2><p>Select any component and send an edit instruction to refine the generated output.</p><span class="mock-cta">Apply edit</span></div><div class="mock-visual"><svg class="node-graph" viewBox="0 0 120 78"><path d="M16 24h88M16 40h56M16 56h72" stroke="currentColor" stroke-width="5"></path></svg></div><button class="section-edit" type="button">Edit this section</button></section>
+                  <section class="mock-component mock-cards" data-component="Cards"><article class="mock-card"><strong>Content</strong><p>Rewrite selected copy.</p></article><article class="mock-card"><strong>Style</strong><p>Use the colour override.</p></article><article class="mock-card"><strong>Sections</strong><p>Drop or keep detected blocks.</p></article><button class="section-edit" type="button">Edit this section</button></section>
+                  <section class="mock-component mock-footer" data-component="Footer"><span>Legal</span><span>Docs</span><span>Status</span><span>Contact</span><button class="section-edit" type="button">Edit this section</button></section>
+                </div>
+                <div class="edit-panel" data-edit-panel="reference">
+                  <h3>Edit Component</h3>
+                  <small>Selected: <strong data-selected-name="reference">Navbar</strong></small>
+                  <textarea rows="4" placeholder="Describe what to change..."></textarea>
+                  <button class="action-button" type="button" data-apply-edit>Apply Changes</button>
+                  <button class="ghost-button" type="button" data-undo-edit>Undo</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="export-bar">
+              <span class="muted" id="referenceOutputStatus">Output ready - 3 files</span>
+              <div class="export-actions">
+                <button class="action-button" type="button" data-export="reference"><svg class="icon"><use href="#i-download"></use></svg>Export ZIP</button>
+                <button class="ghost-button" type="button" data-delivery="github" data-source="reference"><svg class="icon"><use href="#i-github"></use></svg>Push to GitHub</button>
+                <button class="ghost-button" type="button" data-delivery="vercel" data-source="reference"><svg class="icon"><use href="#i-vercel"></use></svg>Deploy to Vercel</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="settingsPage" class="page" data-page-section="settings">
+        <header class="page-header">
+          <div class="page-title">
+            <h1>Settings</h1>
+            <p>Manage profile, appearance, and integrations</p>
+          </div>
+        </header>
+
+        <div class="settings-layout">
+          <nav class="settings-nav" aria-label="Settings categories">
+            <button class="active" type="button" data-settings-tab="profile">Profile</button>
+            <button type="button" data-settings-tab="appearance">Appearance</button>
+            <button type="button" data-settings-tab="integrations">Integrations</button>
+            <button type="button" data-settings-tab="notifications">Notifications</button>
+            <button type="button" data-settings-tab="danger">Danger Zone</button>
+          </nav>
+
+          <div>
+            <section class="settings-section active" data-settings-panel="profile">
+              <div class="settings-card">
+                <div class="profile-avatar">
+                  <span class="avatar avatar-large">AM<svg class="icon camera-dot"><use href="#i-camera"></use></svg></span>
+                  <button class="link-button" type="button">Change photo</button>
+                </div>
+                <div class="form-grid">
+                  <label class="field"><span>Full Name</span><input value="Arjun Mehta"></label>
+                  <label class="field"><span>Age</span><input type="number" min="13" value="24"></label>
+                  <label class="field"><span>Mobile Number</span><input type="tel" value="+91 98765 43210"></label>
+                  <label class="field"><span>Email</span><input type="email" value="arjun@example.com"></label>
+                  <label class="field"><span>Category</span><select><option selected>Developer</option><option>Student</option><option>Designer</option><option>Architect</option><option>Other</option></select></label>
+                  <label class="field full"><span>Address</span><textarea rows="2">Bengaluru, India</textarea></label>
+                </div>
+                <button class="action-button" type="button" data-save-profile>Save Changes</button>
+              </div>
+            </section>
+
+            <section class="settings-section" data-settings-panel="appearance">
+              <div class="settings-card">
+                <label class="field">
+                  <span>Theme</span>
+                  <span class="theme-tabs">
+                    <button class="chip active" type="button">Dark</button>
+                    <button class="chip" type="button">Light</button>
+                    <button class="chip" type="button">System</button>
+                  </span>
+                </label>
+                <label class="field">
+                  <span>Accent colour</span>
+                  <span class="swatches">
+                    <button class="swatch active" style="background:#6C63FF" type="button" data-accent="#6C63FF" aria-label="Indigo"></button>
+                    <button class="swatch" style="background:#24D6B5" type="button" data-accent="#24D6B5" aria-label="Teal"></button>
+                    <button class="swatch" style="background:#FFB14A" type="button" data-accent="#FFB14A" aria-label="Orange"></button>
+                    <button class="swatch" style="background:#FF5C6A" type="button" data-accent="#FF5C6A" aria-label="Red"></button>
+                    <button class="swatch" style="background:#4D8DFF" type="button" data-accent="#4D8DFF" aria-label="Blue"></button>
+                    <button class="swatch" style="background:#B86CFF" type="button" data-accent="#B86CFF" aria-label="Violet"></button>
+                    <input type="color" value="#6C63FF" data-custom-accent aria-label="Custom accent colour">
+                  </span>
+                </label>
+                <label class="field">
+                  <span>Font size</span>
+                  <span class="radio-row">
+                    <button class="chip" type="button">Small</button>
+                    <button class="chip active" type="button">Medium</button>
+                    <button class="chip" type="button">Large</button>
+                  </span>
+                </label>
+                <label class="field">
+                  <span>Reduce motion</span>
+                  <button class="switch" type="button" data-toggle-switch aria-label="Reduce motion"></button>
+                </label>
+              </div>
+            </section>
+
+            <section class="settings-section" data-settings-panel="integrations">
+              <div class="settings-card">
+                <div class="integration-card">
+                  <span class="stat-icon"><svg class="icon"><use href="#i-github"></use></svg></span>
+                  <div><strong>GitHub</strong><p class="muted">Not connected</p></div>
+                  <button class="ghost-button" type="button" data-delivery="github" data-source="generate">Connect GitHub</button>
+                </div>
+                <div class="integration-card">
+                  <span class="stat-icon"><svg class="icon"><use href="#i-vercel"></use></svg></span>
+                  <div><strong>Vercel</strong><p class="muted">Not connected</p></div>
+                  <button class="ghost-button" type="button" data-delivery="vercel" data-source="generate">Connect Vercel</button>
+                </div>
+                <label class="field">
+                  <span>Backend API URL</span>
+                  <input id="apiBaseInput" value="http://127.0.0.1:8000">
+                </label>
+                <label class="field">
+                  <span>OpenAI API Key</span>
+                  <input type="password" placeholder="sk-...">
+                </label>
+                <label class="field">
+                  <span>Gemini API Key</span>
+                  <input type="password" placeholder="AIza...">
+                </label>
+                <button class="action-button" type="button" data-save-integrations>Save Key</button>
+              </div>
+            </section>
+
+            <section class="settings-section" data-settings-panel="notifications">
+              <div class="settings-card">
+                <div class="integration-row"><button class="switch on" type="button" data-toggle-switch aria-label="Generation complete"></button><span>Generation complete</span></div>
+                <div class="integration-row"><button class="switch on" type="button" data-toggle-switch aria-label="Export status"></button><span>Export status</span></div>
+                <div class="integration-row"><button class="switch" type="button" data-toggle-switch aria-label="Weekly summaries"></button><span>Weekly summaries</span></div>
+                <button class="action-button" type="button" data-save-profile>Save Notifications</button>
+              </div>
+            </section>
+
+            <section class="settings-section" data-settings-panel="danger">
+              <div class="settings-card danger-zone">
+                <div class="danger-row">
+                  <div><strong>Delete Account</strong><p class="muted">Remove your profile and generated project history.</p></div>
+                  <button class="danger-button" type="button" data-confirm-danger="account">Delete Account</button>
+                </div>
+                <div class="danger-row">
+                  <div><strong>Clear all projects</strong><p class="muted">Delete saved projects from the browser state.</p></div>
+                  <button class="danger-button ghost" type="button" data-confirm-danger="projects">Clear Data</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Mobile navigation">
+      <button class="nav-item active" data-page="dashboard" type="button" aria-label="Dashboard"><svg class="icon"><use href="#i-grid"></use></svg><span>Dashboard</span></button>
+      <button class="nav-item" data-page="generate" type="button" aria-label="Generate"><svg class="icon"><use href="#i-spark"></use></svg><span>Generate</span></button>
+      <button class="nav-item" data-page="reference" type="button" aria-label="Reference"><svg class="icon"><use href="#i-link"></use></svg><span>Reference</span></button>
+      <button class="nav-item" data-page="settings" type="button" aria-label="Settings"><svg class="icon"><use href="#i-gear"></use></svg><span>Settings</span></button>
+    </nav>
+  </div>
+
+  <div id="toastStack" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+  <div id="modalRoot"></div>
+
+  <script>
+    const state = {
+      loggedIn: false,
+      page: "dashboard",
+      apiBase: localStorage.getItem("architectx_api_base") || "http://127.0.0.1:8000",
+      generateFile: null,
+      generateToken: "",
+      referenceToken: "",
+      selectedMode: { generate: "click", reference: "click" },
+      codeTabs: { generate: "html", reference: "html" },
+      structures: ["Navbar - full width", "Hero section - centered, CTA", "Feature cards - 3-column grid", "Pricing table - 2 tiers", "Footer - 4-column"]
+    };
+
+    const projects = [
+      ["E-Commerce Auth Flow", "Backend", "2 days ago"],
+      ["Stripe Landing Clone", "Reference", "5 days ago"],
+      ["SaaS Dashboard UI", "Frontend", "1 week ago"],
+      ["Microservice API", "Backend", "2 weeks ago"],
+      ["Portfolio Generator", "Frontend", "3 weeks ago"],
+      ["Payment Gateway", "Backend", "1 month ago"]
+    ];
+
+    const historyItems = [
+      ['Generated "E-commerce Auth Flow"', "2h ago"],
+      ["Referenced stripe.com -> UI cloned", "5h ago"],
+      ["Exported ZIP: payment-service", "Yesterday"],
+      ["Architecture scored: 8/10", "Yesterday"],
+      ["Generated frontend bundle", "2 days ago"],
+      ["Connected diagram parser", "4 days ago"]
+    ];
+
+    const codeSamples = {
+      generate: {
+        html: `<main class="generated-repo">
+  <nav>Auth Service | User Service | PostgreSQL | Redis</nav>
+  <section class="architecture-map">
+    <article data-service="auth">Auth Service /health /login /verify</article>
+    <article data-service="user">User Service /health /users</article>
+  </section>
+</main>`,
+        css: `:root { --accent: #6C63FF; --surface: #13152A; }
+.generated-repo { min-height: 100vh; background: #0D0E1A; color: #F0F0FF; }
+.architecture-map { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+[data-service] { border: 1px solid rgba(108,99,255,.2); border-radius: 8px; padding: 18px; }`,
+        js: `const architecture = {
+  services: ["auth-service", "user-service", "postgres", "redis"],
+  connections: [["frontend", "auth-service"], ["auth-service", "postgres"]]
+};
+
+renderServiceGraph(architecture);`
+      },
+      reference: {
+        html: `<main class="reference-page">
+  <nav>ArchiteX</nav>
+  <section class="hero">Imported structure, original content.</section>
+  <section class="features"><article>Clone</article><article>Adapt</article><article>Export</article></section>
+</main>`,
+        css: `.reference-page { background: #0D0E1A; color: #F0F0FF; }
+.hero { min-height: 360px; display: grid; place-items: center; }
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }`,
+        js: `const selectedSections = ["Navbar", "Hero", "Feature cards", "Footer"];
+selectedSections.forEach(section => mountEditableSection(section));`
+      }
+    };
+
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+
+    function icon(name) {
+      return `<svg class="icon"><use href="#${name}"></use></svg>`;
+    }
+
+    function api(path) {
+      return `${state.apiBase.replace(/\/$/, "")}${path}`;
+    }
+
+    function toast(message, type = "info") {
+      const stack = $("#toastStack");
+      const item = document.createElement("div");
+      item.className = `toast ${type}`;
+      const symbol = type === "success" ? "OK" : type === "error" ? "!" : "i";
+      item.innerHTML = `<span class="toast-icon">${symbol}</span><span>${escapeHtml(message)}</span><button type="button" aria-label="Dismiss">&times;</button>`;
+      stack.appendChild(item);
+      const close = () => {
+        item.classList.add("closing");
+        setTimeout(() => item.remove(), 220);
+      };
+      $("button", item).addEventListener("click", close);
+      setTimeout(close, 3000);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
+    }
+
+    function highlightCode(code) {
+      return escapeHtml(code)
+        .replace(/(&quot;.*?&quot;|'.*?'|`[\s\S]*?`)/g, '<span class="token-string">$1</span>')
+        .replace(/\b(const|let|function|return|class|display|grid|background|color|section|article|main|nav)\b/g, '<span class="token-key">$1</span>')
+        .replace(/\b(renderServiceGraph|mountEditableSection|forEach)\b/g, '<span class="token-fn">$1</span>');
+    }
+
+    function setLoggedIn() {
+      state.loggedIn = true;
+      $("#authPage").classList.add("hidden");
+      $("#appShell").classList.remove("hidden");
+      showPage("dashboard");
+      toast("Signed in successfully", "success");
+      checkBackend();
+    }
+
+    function showPage(page) {
+      state.page = page;
+      $$("[data-page-section]").forEach(section => section.classList.toggle("active", section.dataset.pageSection === page));
+      $$("[data-page]").forEach(button => button.classList.toggle("active", button.dataset.page === page));
+    }
+
+    function renderDashboard() {
+      const grid = $("#projectsGrid");
+      grid.innerHTML = projects.map(([name, type, date]) => `
+        <article class="project-card">
+          <div class="project-thumb">
+            <svg class="node-graph" viewBox="0 0 120 78" aria-hidden="true">
+              <path d="M20 38h34M66 38h34M60 18v40" stroke="currentColor" stroke-width="3" fill="none"></path>
+              <circle cx="18" cy="38" r="12" fill="currentColor" opacity=".16"></circle>
+              <circle cx="60" cy="18" r="12" fill="currentColor" opacity=".16"></circle>
+              <circle cx="60" cy="58" r="12" fill="currentColor" opacity=".16"></circle>
+              <circle cx="102" cy="38" r="12" fill="currentColor" opacity=".16"></circle>
+            </svg>
+          </div>
+          <div class="project-meta">
+            <div class="project-name">${escapeHtml(name)}</div>
+            <div class="badge-row"><span class="badge ${type.toLowerCase()}">${type}</span><span class="date">${date}</span></div>
+            <div class="project-actions">
+              <button class="project-action tooltip" type="button" data-tooltip="Open project" aria-label="Open project">${icon("i-open")}</button>
+              <button class="project-action tooltip" type="button" data-tooltip="Download project" aria-label="Download project">${icon("i-download")}</button>
+              <button class="project-action delete tooltip" type="button" data-tooltip="Delete project" aria-label="Delete project">${icon("i-trash")}</button>
+            </div>
+          </div>
+        </article>`).join("");
+
+      $("#historyList").innerHTML = historyItems.map(([text, time]) => `
+        <div class="activity-item"><span class="activity-dot"></span><p>${escapeHtml(text)}<small>${escapeHtml(time)}</small></p></div>
+      `).join("");
+    }
+
+    async function checkBackend() {
+      const status = $("#backendStatus");
+      const dot = $(".status-dot", status);
+      const label = $("span:last-child", status);
+      try {
+        const response = await fetch(api("/health"), { cache: "no-store" });
+        if (!response.ok) throw new Error("Backend returned " + response.status);
+        dot.classList.add("online");
+        label.textContent = "Backend online";
+      } catch (error) {
+        dot.classList.remove("online");
+        label.textContent = "Backend offline";
+      }
+    }
+
+    function setAuthTab(tab) {
+      $$("[data-auth-tab]").forEach(button => button.classList.toggle("active", button.dataset.authTab === tab));
+      $$("[data-auth-panel]").forEach(panel => panel.classList.toggle("hidden", panel.dataset.authPanel !== tab));
+    }
+
+    function setupOtp() {
+      const inputs = $$("#otpPanel input");
+      inputs.forEach((input, index) => {
+        input.addEventListener("input", event => {
+          const digits = event.target.value.replace(/\D/g, "");
+          event.target.value = digits.slice(0, 1);
+          if (digits && inputs[index + 1]) inputs[index + 1].focus();
+        });
+        input.addEventListener("keydown", event => {
+          if (event.key === "Backspace" && !event.target.value && inputs[index - 1]) inputs[index - 1].focus();
+        });
+        input.addEventListener("paste", event => {
+          event.preventDefault();
+          const pasted = event.clipboardData.getData("text").replace(/\D/g, "").slice(0, inputs.length);
+          pasted.split("").forEach((digit, offset) => {
+            if (inputs[index + offset]) inputs[index + offset].value = digit;
+          });
+          const target = inputs[Math.min(index + pasted.length, inputs.length - 1)];
+          if (target) target.focus();
+        });
+      });
+    }
+
+    function setupFileUpload() {
+      const input = $("#generateFileInput");
+      const dropZone = $('[data-drop-zone="generate"]');
+      const openFile = () => input.click();
+      $$("[data-open-file='generateFileInput'], #cameraButton").forEach(button => button.addEventListener("click", openFile));
+      dropZone.addEventListener("click", openFile);
+      input.addEventListener("change", () => setGenerateFile(input.files[0]));
+      ["dragenter", "dragover"].forEach(type => dropZone.addEventListener(type, event => {
+        event.preventDefault();
+        dropZone.classList.add("dragging");
+      }));
+      ["dragleave", "drop"].forEach(type => dropZone.addEventListener(type, event => {
+        event.preventDefault();
+        dropZone.classList.remove("dragging");
+      }));
+      dropZone.addEventListener("drop", event => setGenerateFile(event.dataTransfer.files[0]));
+    }
+
+    function setGenerateFile(file) {
+      if (!file) return;
+      state.generateFile = file;
+      const holder = $("#generateFileState");
+      const isImage = file.type.startsWith("image/");
+      holder.classList.remove("hidden");
+      holder.innerHTML = `<div class="file-pill"><span>${escapeHtml(file.name)}</span><button type="button" aria-label="Remove file">&times;</button></div>${isImage ? '<img class="file-preview" alt="Uploaded preview">' : ""}`;
+      $("button", holder).addEventListener("click", () => {
+        state.generateFile = null;
+        $("#generateFileInput").value = "";
+        holder.classList.add("hidden");
+        holder.innerHTML = "";
+      });
+      if (isImage) $(".file-preview", holder).src = URL.createObjectURL(file);
+      toast("Attached " + file.name, "success");
+    }
+
+    function renderDetected(architecture, lint) {
+      const services = architecture.services || mockArchitecture().services;
+      const connections = architecture.connections || mockArchitecture().connections;
+      $("#detectedPanel").classList.remove("hidden");
+      $("#scorePanel").classList.remove("hidden");
+      $("#nodesList").innerHTML = services.map(service => {
+        const kind = service.type === "database" ? "database" : service.type === "cache" ? "cache" : service.type === "frontend" ? "react" : "api";
+        return `<div class="node-item"><span class="node-left"><span class="mini-dot"></span><span>${escapeHtml(service.label)}</span></span><span class="badge ${kind}">${kind.toUpperCase()}</span></div>`;
+      }).join("");
+      $("#connectionsList").innerHTML = connections.map(connection => `<div class="connection-item">${escapeHtml(connection.from_id)} -&gt; ${escapeHtml(connection.to_id)}</div>`).join("");
+
+      const score = lint?.score ? Math.max(1, Math.round(lint.score / 10)) : 8;
+      $("#scoreNumber").textContent = `${score}/10`;
+      $("#scoreProgress").style.width = `${score * 10}%`;
+      const warnings = lint?.warnings?.length ? lint.warnings.map(item => [item.severity, item.message]) : [
+        ["warning", "Payment service connects directly to User DB"],
+        ["info", "Consider API Gateway for public endpoints"],
+        ["success", "Auth flow correctly isolated"]
+      ];
+      $("#warningList").innerHTML = warnings.map(([level, message]) => {
+        const tone = level === "success" ? "green" : level === "warning" || level === "error" ? "yellow" : "";
+        return `<div class="warning-item"><span class="warning-left"><span class="mini-dot ${tone}"></span><span>${escapeHtml(message)}</span></span></div>`;
+      }).join("");
+    }
+
+    function mockArchitecture(rawDescription = "") {
+      return {
+        raw_description: rawDescription || "Frontend, Auth Service, User Service, PostgreSQL, Redis",
+        confidence: 0.92,
+        services: [
+          { id: "frontend", label: "Frontend", type: "frontend", language: "React", env_vars: ["VITE_API_URL"], endpoints: [] },
+          { id: "auth-service", label: "Auth Service", type: "rest_api", language: "Python", env_vars: ["JWT_SECRET"], endpoints: ["/health", "/login", "/verify"] },
+          { id: "user-service", label: "User Service", type: "rest_api", language: "Python", env_vars: ["DATABASE_URL"], endpoints: ["/health", "/users"] },
+          { id: "postgres", label: "PostgreSQL", type: "database", language: null, env_vars: ["POSTGRES_DB"], endpoints: [] },
+          { id: "redis", label: "Redis", type: "cache", language: null, env_vars: ["REDIS_URL"], endpoints: [] }
+        ],
+        connections: [
+          { from_id: "frontend", to_id: "auth-service", protocol: "http" },
+          { from_id: "auth-service", to_id: "user-service", protocol: "http" },
+          { from_id: "user-service", to_id: "postgres", protocol: "tcp" },
+          { from_id: "auth-service", to_id: "redis", protocol: "tcp" }
+        ]
+      };
+    }
+
+    function timelineStart() {
+      $("#timelinePanel").classList.remove("hidden");
+      $("#timelinePulse").textContent = "active";
+      $("#timelineList").innerHTML = "";
+    }
+
+    function timelineAdd(message, status = "done") {
+      const row = document.createElement("div");
+      row.className = "timeline-row";
+      const mark = status === "loading" ? '<span class="spinner"></span>' : status === "error" ? '<span class="mini-dot yellow"></span>' : '<span class="mini-dot green"></span>';
+      row.innerHTML = `${mark}<code>${escapeHtml(message)}</code><time>${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</time>`;
+      $("#timelineList").appendChild(row);
+      $("#timelineList").scrollTop = $("#timelineList").scrollHeight;
+    }
+
+    function timelineDone() {
+      $("#timelinePulse").textContent = "idle";
+    }
+
+    async function parseUploadedImage() {
+      if (!state.generateFile || !state.generateFile.type.startsWith("image/")) return null;
+      const data = new FormData();
+      data.append("image", state.generateFile);
+      data.append("mode", "backend");
+      const response = await fetch(api("/parse"), { method: "POST", body: data });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.detail || payload.error || "Could not parse image");
+      return payload;
+    }
+
+    async function handleGenerate() {
+      const prompt = $("#architecturePrompt").value.trim();
+      timelineStart();
+      timelineAdd("Reading diagram...", "loading");
+      let architecture = mockArchitecture(prompt);
+      let lint = null;
+
+      try {
+        if (state.generateFile?.type.startsWith("image/")) {
+          const parsed = await parseUploadedImage();
+          architecture = parsed.parsed;
+          lint = parsed.lint;
+          timelineAdd("Parsed uploaded whiteboard image");
+        } else if (state.generateFile) {
+          timelineAdd("Attached document will use prompt fallback");
+        }
+      } catch (error) {
+        timelineAdd(error.message, "error");
+        toast("Image parsing fell back to mock architecture", "info");
+      }
+
+      renderDetected(architecture, lint);
+
+      try {
+        await streamRepository("/generate", architecture, event => {
+          timelineAdd(event.message || event.step || "Backend event");
+          if (event.download_token) {
+            state.generateToken = event.download_token;
+            $("#generateOutputStatus").textContent = "Output ready - backend ZIP token received";
+          }
+        });
+        timelineDone();
+        toast("Backend repository generated", "success");
+      } catch (error) {
+        simulateTimeline(() => {
+          state.generateToken = "";
+          $("#generateOutputStatus").textContent = "Preview ready - start backend for ZIP export";
+          toast("Backend offline, showing simulated output", "info");
+        });
+      }
+    }
+
+    async function streamRepository(path, payload, onEvent) {
+      const response = await fetch(api(path), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok || !response.body) {
+        let detail = "Backend request failed";
+        try {
+          const error = await response.json();
+          detail = error.detail || error.error || detail;
+        } catch (_) {}
+        throw new Error(detail);
+      }
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const chunks = buffer.split("\n\n");
+        buffer = chunks.pop();
+        chunks.forEach(chunk => {
+          const dataLine = chunk.split("\n").find(line => line.startsWith("data:"));
+          if (!dataLine) return;
+          try {
+            onEvent(JSON.parse(dataLine.replace(/^data:\s*/, "")));
+          } catch (_) {}
+        });
+      }
+    }
+
+    function simulateTimeline(done) {
+      const steps = [
+        "Identified 4 services",
+        "Creating API contracts",
+        "Generating Dockerfiles...",
+        "Validating service ports...",
+        "Running smoke tests...",
+        "Repository ready"
+      ];
+      let index = 0;
+      const interval = setInterval(() => {
+        timelineAdd(steps[index], index === 2 ? "loading" : "done");
+        index += 1;
+        if (index === steps.length) {
+          clearInterval(interval);
+          timelineDone();
+          done?.();
+        }
+      }, 800);
+    }
+
+    function setOutputTab(key) {
+      const [scope, tab] = key.split(":");
+      $$(`[data-workspace="${scope}"] [data-output-tab]`).forEach(button => button.classList.toggle("active", button.dataset.outputTab === key));
+      $$(`[data-workspace="${scope}"] [data-output-panel]`).forEach(panel => panel.classList.toggle("hidden", panel.dataset.outputPanel !== key));
+      if (scope === "reference" && tab === "preview") return;
+    }
+
+    function setCodeTab(key) {
+      const [scope, language] = key.split(":");
+      state.codeTabs[scope] = language;
+      $$(`[data-code-tab^="${scope}:"]`).forEach(button => button.classList.toggle("active", button.dataset.codeTab === key));
+      renderCode(scope);
+    }
+
+    function renderCode(scope) {
+      const language = state.codeTabs[scope];
+      const target = scope === "generate" ? $("#generateCode") : $("#referenceCode");
+      target.innerHTML = highlightCode(codeSamples[scope][language]);
+    }
+
+    async function importReference() {
+      const url = $("#referenceUrl").value.trim();
+      if (!url) {
+        toast("Enter a reference URL first", "error");
+        return;
+      }
+      const status = $("#referenceStatus");
+      status.innerHTML = '<span class="mini-dot yellow"></span><span>Scraping...</span>';
+      try {
+        const response = await fetch(api("/url/scrape"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.detail || payload.error || "Scrape failed");
+        state.structures = (payload.sections || []).map(section => `${section} - ${payload.column_structure || "detected"}`);
+        status.innerHTML = '<span class="mini-dot green"></span><span>Imported</span>';
+        toast("Reference structure imported", "success");
+      } catch (error) {
+        state.structures = ["Navbar - full width", "Hero section - centered, CTA", "Feature cards - 3-column grid", "Pricing table - 2 tiers", "Footer - 4-column"];
+        status.innerHTML = '<span class="mini-dot green"></span><span>Imported mock structure</span>';
+        toast("Backend unavailable, loaded mock structure", "info");
+      }
+      renderStructure();
+    }
+
+    function renderStructure() {
+      $("#structurePanel").classList.remove("hidden");
+      $("#structureList").innerHTML = state.structures.map((item, index) => `
+        <label class="check-item"><input type="checkbox" checked data-structure-index="${index}"><span>${escapeHtml(item)}</span></label>
+      `).join("");
+    }
+
+    async function generateReference() {
+      const selected = $$("[data-structure-index]").filter(input => input.checked).map(input => state.structures[Number(input.dataset.structureIndex)]);
+      const instructions = $("#referenceInstructions").value.trim() || "ArchiteX reference-generated frontend";
+      const architecture = {
+        raw_description: instructions,
+        confidence: 0.9,
+        services: [{
+          id: "reference-frontend",
+          label: "Reference Frontend",
+          type: "frontend",
+          language: "React",
+          components: selected.map((item, index) => ({
+            id: `section-${index + 1}`,
+            type: item.split(" - ")[0],
+            label: item.split(" - ")[0],
+            description: instructions
+          }))
+        }],
+        connections: []
+      };
+
+      toast("Generating frontend bundle", "info");
+      try {
+        await streamRepository("/frontend/generate", architecture, event => {
+          if (event.download_token) {
+            state.referenceToken = event.download_token;
+            $("#referenceOutputStatus").textContent = "Output ready - frontend ZIP token received";
+          }
+        });
+        toast("Reference frontend generated", "success");
+      } catch (error) {
+        state.referenceToken = "";
+        $("#referenceOutputStatus").textContent = "Preview ready - start backend for ZIP export";
+        toast("Backend offline, preview updated locally", "info");
+      }
+      setOutputTab("reference:preview");
+    }
+
+    async function exportZip(scope) {
+      const token = scope === "generate" ? state.generateToken : state.referenceToken;
+      if (!token) {
+        toast("Run generation with the backend online before exporting ZIP", "error");
+        return;
+      }
+      try {
+        const response = await fetch(api("/deliver/zip"), {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ download_token: token })
+        });
+        if (!response.ok) throw new Error("ZIP export failed");
+        const blob = await response.blob();
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${scope}-repo.zip`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        toast("ZIP export started", "success");
+      } catch (error) {
+        toast(error.message, "error");
+      }
+    }
+
+    function openDeliveryModal(kind, source) {
+      const token = source === "generate" ? state.generateToken : state.referenceToken;
+      const root = $("#modalRoot");
+      const isGithub = kind === "github";
+      root.innerHTML = `
+        <div class="modal-backdrop">
+          <form class="modal" id="deliveryForm">
+            <div class="modal-head">
+              <h2>${isGithub ? "Push to GitHub" : "Deploy to Vercel"}</h2>
+              <button class="icon-button" type="button" data-close-modal aria-label="Close">&times;</button>
+            </div>
+            <p class="muted">${isGithub ? "Use a GitHub token and repository name to push the generated files." : "Deploy a GitHub repository through the backend Vercel connector."}</p>
+            ${isGithub ? `
+              <label class="field"><span>Repository name</span><input name="repo" placeholder="architectx-generated" required></label>
+              <label class="field"><span>GitHub token</span><input name="token" type="password" placeholder="ghp_..." required></label>
+            ` : `
+              <label class="field"><span>GitHub repository URL</span><input name="repoUrl" placeholder="https://github.com/user/repo" required></label>
+              <label class="field"><span>Vercel token</span><input name="token" type="password" placeholder="vercel_..." required></label>
+            `}
+            <div class="modal-actions">
+              <button class="ghost-button" type="button" data-close-modal>Cancel</button>
+              <button class="action-button" type="submit">${isGithub ? "Push" : "Deploy"}</button>
+            </div>
+          </form>
+        </div>`;
+      $$("[data-close-modal]", root).forEach(button => button.addEventListener("click", () => root.innerHTML = ""));
+      $("#deliveryForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        if (isGithub && !token) {
+          toast("Generate a repository before pushing to GitHub", "error");
+          return;
+        }
+        const data = new FormData(event.currentTarget);
+        try {
+          const response = await fetch(api(isGithub ? "/deliver/github" : "/deliver/vercel"), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(isGithub
+              ? { download_token: token, repo_name: data.get("repo"), github_token: data.get("token") }
+              : { github_repo_url: data.get("repoUrl"), vercel_token: data.get("token") })
+          });
+          const payload = await response.json();
+          if (!response.ok) throw new Error(payload.detail || payload.error || "Delivery failed");
+          toast(isGithub ? `Pushed: ${payload.repo_url}` : `Deployed: ${payload.deploy_url}`, "success");
+          root.innerHTML = "";
+        } catch (error) {
+          toast(error.message, "error");
+        }
+      });
+    }
+
+    function setupSelection(scope) {
+      const area = $(`[data-preview-area="${scope}"]`);
+      if (!area) return;
+      let dragStart = null;
+      let rect = null;
+
+      area.addEventListener("click", event => {
+        const component = event.target.closest(".mock-component");
+        if (!component) return;
+        if (state.selectedMode[scope] === "drag") return;
+        selectComponent(scope, component);
+      });
+
+      area.addEventListener("mousedown", event => {
+        if (state.selectedMode[scope] !== "drag") return;
+        const bounds = area.getBoundingClientRect();
+        dragStart = { x: event.clientX - bounds.left + area.scrollLeft, y: event.clientY - bounds.top + area.scrollTop };
+        rect = document.createElement("div");
+        rect.className = "selection-rect";
+        area.appendChild(rect);
+      });
+
+      area.addEventListener("mousemove", event => {
+        if (!dragStart || !rect) return;
+        const bounds = area.getBoundingClientRect();
+        const current = { x: event.clientX - bounds.left + area.scrollLeft, y: event.clientY - bounds.top + area.scrollTop };
+        const left = Math.min(dragStart.x, current.x);
+        const top = Math.min(dragStart.y, current.y);
+        rect.style.left = `${left}px`;
+        rect.style.top = `${top}px`;
+        rect.style.width = `${Math.abs(dragStart.x - current.x)}px`;
+        rect.style.height = `${Math.abs(dragStart.y - current.y)}px`;
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (!dragStart || !rect) return;
+        const r = rect.getBoundingClientRect();
+        const selected = $$(".mock-component", area).find(component => overlaps(r, component.getBoundingClientRect()));
+        if (selected) selectComponent(scope, selected);
+        rect.remove();
+        rect = null;
+        dragStart = null;
+      });
+    }
+
+    function overlaps(a, b) {
+      return !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
+    }
+
+    function selectComponent(scope, component) {
+      const area = $(`[data-preview-area="${scope}"]`);
+      $$(".mock-component", area).forEach(item => item.classList.remove("selected"));
+      component.classList.add("selected");
+      const panel = $(`[data-edit-panel="${scope}"]`);
+      if (panel) {
+        panel.classList.add("open");
+        $(`[data-selected-name="${scope}"]`).textContent = component.dataset.component || "Component";
+      }
+      toast(`${component.dataset.component || "Component"} selected`, "info");
+    }
+
+    function setSelectMode(scope, mode) {
+      state.selectedMode[scope] = mode;
+      $$(`[data-select-modes="${scope}"] .mode-button`).forEach(button => button.classList.toggle("active", button.dataset.selectMode === mode));
+      const area = $(`[data-preview-area="${scope}"]`);
+      if (area) area.classList.toggle("section-mode", mode === "section");
+    }
+
+    function setupSettings() {
+      $$("[data-settings-tab]").forEach(button => button.addEventListener("click", () => {
+        $$("[data-settings-tab]").forEach(item => item.classList.toggle("active", item === button));
+        $$("[data-settings-panel]").forEach(panel => panel.classList.toggle("active", panel.dataset.settingsPanel === button.dataset.settingsTab));
+      }));
+      $$(".swatch").forEach(button => button.addEventListener("click", () => setAccent(button.dataset.accent, button)));
+      $("[data-custom-accent]").addEventListener("input", event => setAccent(event.target.value));
+      $$("[data-toggle-switch]").forEach(button => button.addEventListener("click", () => button.classList.toggle("on")));
+      $$(".chip").forEach(button => button.addEventListener("click", () => {
+        const group = button.parentElement;
+        $$(".chip", group).forEach(item => item.classList.remove("active"));
+        button.classList.add("active");
+      }));
+    }
+
+    function setAccent(value, activeButton) {
+      document.documentElement.style.setProperty("--accent", value);
+      document.documentElement.style.setProperty("--accent-hover", value);
+      $$(".swatch").forEach(item => item.classList.toggle("active", item === activeButton));
+    }
+
+    function confirmDanger(kind) {
+      const root = $("#modalRoot");
+      root.innerHTML = `
+        <div class="modal-backdrop">
+          <div class="modal">
+            <div class="modal-head"><h2>Confirm action</h2><button class="icon-button" type="button" data-close-modal aria-label="Close">&times;</button></div>
+            <p class="muted">This will ${kind === "account" ? "delete the account mock state" : "clear project counters and local settings"}.</p>
+            <div class="modal-actions">
+              <button class="ghost-button" type="button" data-close-modal>Cancel</button>
+              <button class="danger-button" type="button" data-danger-confirmed>Confirm</button>
+            </div>
+          </div>
+        </div>`;
+      $$("[data-close-modal]", root).forEach(button => button.addEventListener("click", () => root.innerHTML = ""));
+      $("[data-danger-confirmed]", root).addEventListener("click", () => {
+        root.innerHTML = "";
+        toast(kind === "account" ? "Account deletion simulated" : "Project data cleared", "success");
+      });
+    }
+
+    function init() {
+      renderDashboard();
+      renderCode("generate");
+      renderCode("reference");
+      renderStructure();
+      setupOtp();
+      setupFileUpload();
+      setupSelection("generate");
+      setupSelection("reference");
+      setupSettings();
+      $("#apiBaseInput").value = state.apiBase;
+
+      $$("[data-auth-tab]").forEach(button => button.addEventListener("click", () => setAuthTab(button.dataset.authTab)));
+      $("#signinForm").addEventListener("submit", event => {
+        event.preventDefault();
+        $("#otpPanel").classList.remove("hidden");
+        $(".otp-grid input").focus();
+      });
+      $("#verifySignin").addEventListener("click", setLoggedIn);
+      $("#signupForm").addEventListener("submit", event => {
+        event.preventDefault();
+        setLoggedIn();
+      });
+      $$(".password-toggle").forEach(button => button.addEventListener("click", () => {
+        const input = button.parentElement.querySelector("input");
+        input.type = input.type === "password" ? "text" : "password";
+      }));
+      $$("[data-page]").forEach(button => button.addEventListener("click", () => showPage(button.dataset.page)));
+      $$("[data-route-link]").forEach(link => link.addEventListener("click", event => {
+        event.preventDefault();
+        showPage(link.dataset.routeLink);
+      }));
+      $$("[data-logout]").forEach(button => button.addEventListener("click", () => {
+        state.loggedIn = false;
+        $("#appShell").classList.add("hidden");
+        $("#authPage").classList.remove("hidden");
+      }));
+      $("#sendGenerate").addEventListener("click", handleGenerate);
+      $("#importReference").addEventListener("click", importReference);
+      $("#generateReference").addEventListener("click", generateReference);
+      $$("[data-output-tab]").forEach(button => button.addEventListener("click", () => setOutputTab(button.dataset.outputTab)));
+      $$("[data-code-tab]").forEach(button => button.addEventListener("click", () => setCodeTab(button.dataset.codeTab)));
+      $$("[data-copy-code]").forEach(button => button.addEventListener("click", async () => {
+        const scope = button.dataset.copyCode;
+        const lang = state.codeTabs[scope];
+        await navigator.clipboard.writeText(codeSamples[scope][lang]);
+        toast("Code copied", "success");
+      }));
+      $$("[data-readme-toggle]").forEach(button => button.addEventListener("click", () => {
+        const content = $(`[data-readme-content="${button.dataset.readmeToggle}"]`);
+        content.classList.toggle("open");
+        $("span", button).textContent = content.classList.contains("open") ? "-" : "+";
+      }));
+      $$("[data-export]").forEach(button => button.addEventListener("click", () => exportZip(button.dataset.export)));
+      $$("[data-delivery]").forEach(button => button.addEventListener("click", () => openDeliveryModal(button.dataset.delivery, button.dataset.source)));
+      $$("[data-select-mode]").forEach(button => button.addEventListener("click", () => setSelectMode(button.closest("[data-select-modes]").dataset.selectModes, button.dataset.selectMode)));
+      $$("[data-apply-edit]").forEach(button => button.addEventListener("click", () => toast("Edit instruction queued", "success")));
+      $$("[data-undo-edit]").forEach(button => button.addEventListener("click", () => toast("Last edit reverted", "info")));
+      $$("[data-save-profile]").forEach(button => button.addEventListener("click", () => toast("Changes saved", "success")));
+      $("[data-save-integrations]").addEventListener("click", () => {
+        state.apiBase = $("#apiBaseInput").value.trim() || state.apiBase;
+        localStorage.setItem("architectx_api_base", state.apiBase);
+        toast("Integration settings saved", "success");
+        checkBackend();
+      });
+      $$("[data-confirm-danger]").forEach(button => button.addEventListener("click", () => confirmDanger(button.dataset.confirmDanger)));
+      checkBackend();
+    }
+
+    init();
+  </script>
+</body>
+</html>
+
+
